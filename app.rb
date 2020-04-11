@@ -15,7 +15,7 @@ class App < Sinatra::Base
   end
 
   before '/slack/*' do
-    validate_slack_token
+    validate_slack_token unless ENV['RACK_ENV'] == 'development'
   end
 
   post '/slack/slash_command' do
