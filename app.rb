@@ -19,25 +19,34 @@ class App < Sinatra::Base
       user_id: params['user_id']
     )
 
-    greeting = if user.present?
-                 "Welcome back, #{params['user_name']}!"
-               else
-                 persist_user(params)
-                 "Hi there, #{params['user_name']}! Pleasure to meet you!"
-               end
+    unless user.present?
+      post_response(
+        url: params['response_url'],
+        text: "Hi there, <@#{params['user_id']}>! Pleasure to meet you!"
+      )
+      persist_user(params)
+    end
 
-    post_response(url: params['response_url'], text: greeting)
+    text = params['text']
 
-    case
+    case text
+    when SlashCommand::TextMatchers::Empty
+      "Try awarding a Spiderman Point to someone via `#{params['command']} @<their_username>` !"
     when SlashCommand::TextMatchers::Award
       point = SlashCommand::TextMatchers::Award.parse(
         from: params['user_id'],
-        text: params['text']
+        text: text
       )
       # NOTE: Rework this
       "<@#{point.from}> has awarded one (1) Spiderman point to <@#{point.to}>! (reason: `#{point.reason}`)"
     else
-      '🤔 Sorry, not really sure what to make of that...'
+      <<~MSG
+        🤔 Sorry, not really sure what to make of this...
+
+        ```
+        #{params['command']} #{text}
+        ```
+      MSG
     end
   end
 
