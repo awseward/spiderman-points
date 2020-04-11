@@ -1,0 +1,17 @@
+development:
+  adapter: postgresql
+  database: spiderman_points_development
+  encoding: utf8
+  host: localhost
+  port: 5432
+  username: spiderman_points
+  password: <%= ENV['SPIDERMAN_POINTS_DB_PASSWORD'] %>
+
+test:
+  adapter: postgresql
+  database: spiderman_points_test
+  encoding: utf8
+  host: localhost
+  port: 5432
+  username: spiderman_points
+  password: <%= ENV['SPIDERMAN_POINTS_DB_PASSWORD'] %>

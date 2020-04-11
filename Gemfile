@@ -2,5 +2,11 @@
 
 source 'https://rubygems.org'
 
-gem 'sinatra'
+gem 'activerecord'
+gem 'pg'
 gem 'pry'
+gem 'rake'
+gem 'rest-client'
+gem 'sinatra'
+gem 'sinatra-activerecord'
+gem 'standalone_migrations'
