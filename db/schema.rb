@@ -10,16 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_11_063337) do
+ActiveRecord::Schema.define(version: 2020_04_11_204231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "points", force: :cascade do |t|
+    t.string "team_id", null: false
+    t.string "from_id", null: false
+    t.string "to_id", null: false
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "team_id", null: false
-    t.string "team_domain", null: false
     t.string "user_id", null: false
-    t.string "user_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

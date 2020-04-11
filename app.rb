@@ -39,12 +39,11 @@ class App < Sinatra::Base
     when SlashCommand::TextMatchers::Empty
       "Try awarding a Spiderman Point to someone via `#{params['command']} @<their_username>` !"
     when SlashCommand::TextMatchers::Award
-      point = SlashCommand::TextMatchers::Award.parse(
-        from: params['user_id'],
-        text: text
-      )
+      point = Point.from_slash_command params
+      point.save!
+
       # NOTE: Rework this
-      "<@#{point.from}> has awarded one (1) Spiderman point to <@#{point.to}>! (reason: `#{point.reason}`)"
+      "<@#{point.from_id}> has awarded one (1) Spiderman point to <@#{point.to_id}>! (reason: `#{point.reason}`)"
     else
       <<~MSG
         🤔 Sorry, not really sure what to make of this...
@@ -72,9 +71,7 @@ class App < Sinatra::Base
   def persist_user(params)
      User.new(
        team_id: params['team_id'],
-       team_domain: params['team_domain'],
-       user_id: params['user_id'],
-       user_name: params['user_name']
+       user_id: params['user_id']
      ).save!
   end
 
