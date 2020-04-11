@@ -1,8 +1,12 @@
 require 'sinatra/base'
+require 'pry'
 
 class App < Sinatra::Base
-  get '/slack/slash_command' do
-    'Hello!'
+  post '/slack/slash_command' do
+    @req_data = JSON.parse request.body.read
+    puts @req_data
+
+    'Hello'
   end
 
   # start the server if ruby file executed directly
