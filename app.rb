@@ -26,7 +26,7 @@ class App < Sinatra::Base
     )
 
     unless user.present?
-      post_response(
+      whisper(
         url: params['response_url'],
         text: "Hi there, <@#{params['user_id']}>! Pleasure to meet you!"
       )
@@ -41,9 +41,7 @@ class App < Sinatra::Base
     when SlashCommand::TextMatchers::Award
       point = Point.from_slash_command params
       point.save!
-
-      # NOTE: Rework this
-      "<@#{point.from_id}> has awarded one (1) Spiderman point to <@#{point.to_id}>! (reason: `#{point.reason}`)"
+      speak url: params['response_url'], text: point.to_slack_announcement
     else
       <<~MSG
         🤔 Sorry, not really sure what to make of this...
@@ -64,8 +62,20 @@ class App < Sinatra::Base
 
   private
 
-  def post_response(url:, text:)
-    RestClient.post(url, { text: text }.to_json, { content_type: 'application/json' })
+  def whisper(**args)
+    post_response args.merge(response_type: 'ephemeral')
+  end
+
+  def speak(**args)
+    post_response args.merge(response_type: 'in_channel')
+  end
+
+  def post_response(url:, text:, response_type:)
+    RestClient.post(
+      url,
+      { text: text, response_type: response_type }.to_json,
+      { content_type: 'application/json' }
+    )
   end
 
   def persist_user(params)
@@ -74,5 +84,4 @@ class App < Sinatra::Base
        user_id: params['user_id']
      ).save!
   end
-
 end
