@@ -42,6 +42,10 @@ class App < Sinatra::Base
       point = Point.from_slash_command params
       point.save!
       speak url: params['response_url'], text: point.to_slack_announcement
+
+      # NOTE: No response directly back to user required. The `nil` returned
+      # here accomplishes that.
+      nil
     else
       <<~MSG
         🤔 Sorry, not really sure what to make of this...
