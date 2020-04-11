@@ -2,6 +2,11 @@ require 'sinatra/base'
 require 'pry'
 
 class App < Sinatra::Base
+  not_found do
+    status 404
+    ''
+  end
+
   post '/slack/slash_command' do
     puts params
 
