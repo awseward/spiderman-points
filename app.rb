@@ -7,9 +7,15 @@ Dir["#{Dir.pwd}/lib/**/*.rb"].each { |file| require file }
 Dir["#{Dir.pwd}/models/**/*.rb"].each { |file| require file }
 
 class App < Sinatra::Base
+  include SlackRequestValidation
+
   not_found do
     status 404
     nil
+  end
+
+  before '/slack/*' do
+    validate_slack_token
   end
 
   post '/slack/slash_command' do
