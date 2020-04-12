@@ -69,8 +69,7 @@ class App < Sinatra::Base
   end
 
   get '/install_complete' do
-    # TODO: Render something a little nicer here.
-    'Ok - you can close this page now.'
+    'Ok - you can close this page now. TODO: Put something a little nicer here.'
   end
 
   post '/dev/null' do
