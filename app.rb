@@ -54,6 +54,23 @@ class App < Sinatra::Base
     end
   end
 
+  get '/oauth/slack' do
+    # TODO: Validation
+
+    response_body = RestClient.post('https://slack.com/api/oauth.v2.access', {
+      code: params['code'],
+      client_id: ENV['SLACK_OAUTH_CLIENT_ID'],
+      client_secret: ENV['SLACK_OAUTH_CLIENT_SECRET']
+    }).body
+
+    # TODO: Change this so we don't write duplicates if the installation happens multiple times.
+    credential = OauthCredential.from_slack_response(JSON.parse response_body)
+    credential.save!
+
+    # TODO: Render something a little nicer here.
+    'Ok - you can close this page now.'
+  end
+
   post '/dev/null' do
     status 204
   end
