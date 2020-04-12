@@ -18,6 +18,8 @@ class App < Sinatra::Base
     validate_slack_token unless ENV['RACK_ENV'] == 'development'
   end
 
+  get('/') { erb :index }
+
   post '/slack/slash_command' do
     puts params
     user = User.find_by(

@@ -1,0 +1,58 @@
+body {
+  background-image: url('https://media.giphy.com/media/l46Cnk4ZRTlfeI32o/giphy.gif');
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 800px;
+  background-color: #C63519;
+  color: #EEEEEE;
+  font-family: monospace;
+  text-align: center;
+}
+
+h1 {
+  font-size: 80pt;
+  text-align: center;
+}
+
+h2 {
+  margin-top: 200px;
+  font-size: 50pt;
+  text-align: center;
+}
+
+h3 {
+  font-size: 40pt;
+  font-weight: 100;
+}
+
+p {
+  font-size: 20pt;
+  margin-top: 100px;
+}
+
+.spiderman-spin-cw {
+  animation: rotation_cw 0.8s infinite linear;
+}
+
+.spiderman-spin-ccw {
+  animation: rotation_ccw 0.8s infinite linear;
+}
+
+@keyframes rotation_cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes rotation_ccw {
+  from {
+    transform: rotate(359deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
