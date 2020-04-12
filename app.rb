@@ -20,6 +20,8 @@ class App < Sinatra::Base
 
   get('/') { erb :index }
 
+  get('/install_complete') { erb :install_complete }
+
   post '/slack/slash_command' do
     puts params
     user = User.find_by(
@@ -66,10 +68,6 @@ class App < Sinatra::Base
     OauthCredential.upsert_from_slack_response JSON.parse(response_body)
 
     redirect to('/install_complete')
-  end
-
-  get '/install_complete' do
-    'Ok - you can close this page now. TODO: Put something a little nicer here.'
   end
 
   post '/dev/null' do
