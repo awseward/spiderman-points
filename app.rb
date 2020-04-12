@@ -28,32 +28,27 @@ class App < Sinatra::Base
     unless user.present?
       whisper(
         url: params['response_url'],
-        text: "Hi there, <@#{params['user_id']}>! Pleasure to meet you!"
+        text: SlackPresenters.first_time_greeting(params)
       )
       persist_user(params)
     end
 
-    text = params['text']
-
-    case text
+    case params['text']
     when SlashCommand::TextMatchers::Empty
-      "Try awarding a Spiderman Point to someone via `#{params['command']} @<their_username>` !"
+      SlackPresenters.response_for_empty_command params
     when SlashCommand::TextMatchers::Award
       point = Point.from_slash_command params
       point.save!
-      speak url: params['response_url'], text: point.to_slack_announcement
-
+      speak(
+        url: params['response_url'],
+        text: SlackPresenters.award_announcement(point)
+      )
       # NOTE: No response directly back to user required. The `nil` returned
       # here accomplishes that.
       nil
-    else
-      <<~MSG
-        🤔 Sorry, not really sure what to make of this...
 
-        ```
-        #{params['command']} #{text}
-        ```
-      MSG
+    else
+      SlackPresenters.response_for_invalid_command params
     end
   end
 
