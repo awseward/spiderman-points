@@ -34,7 +34,10 @@ p {
 
 a {
   color: #7FDBFF;
-  /* color: #EEEEEE; */
+}
+
+.add-to-slack {
+  vertical-align: top;
 }
 
 p.pitch {
@@ -64,5 +67,47 @@ p.pitch {
   }
   to {
     transform: rotate(0deg);
+  }
+}
+
+.sm-point-left {
+  animation: sm-point-left 0.75s infinite linear alternate-reverse;
+}
+
+.sm-point-right {
+  animation: sm-point-right 0.75s infinite linear alternate-reverse;
+}
+
+.add-to-slack {
+  animation: add-slack-lightup 1.5s infinite linear normal;
+}
+
+@keyframes add-slack-lightup {
+  0% {
+    box-shadow: 0 0 0 #EEE;
+  }
+  1% {
+    box-shadow: 0 0 5000px #EEE;
+  }
+  20% {
+    box-shadow: 0 0 100px #EEE;
+  }
+}
+
+@keyframes sm-point-left {
+  from {
+    transform: translateX(-30px);
+  }
+  to {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes sm-point-right {
+  from {
+    transform: translateX(30px);
+  }
+  to {
+    transform: translateX(-10px);
   }
 }
