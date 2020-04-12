@@ -81,11 +81,11 @@ class App < Sinatra::Base
   private
 
   def whisper(**args)
-    post_response args.merge(response_type: 'ephemeral')
+    post_response( **args.merge(response_type: 'ephemeral') )
   end
 
   def speak(**args)
-    post_response args.merge(response_type: 'in_channel')
+    post_response( **args.merge(response_type: 'in_channel') )
   end
 
   def post_response(url:, text:, response_type:)
