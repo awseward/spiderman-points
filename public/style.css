@@ -13,6 +13,8 @@ body {
 h1 {
   font-size: 80pt;
   text-align: center;
+  color: #EEE;
+  text-shadow: 0 0 20px #CCC;
 }
 
 h2 {
@@ -28,6 +30,14 @@ h3 {
 
 p {
   font-size: 20pt;
+}
+
+a {
+  color: #7FDBFF;
+  /* color: #EEEEEE; */
+}
+
+p.pitch {
   margin-top: 100px;
 }
 
