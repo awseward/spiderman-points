@@ -63,9 +63,7 @@ class App < Sinatra::Base
       client_secret: ENV['SLACK_OAUTH_CLIENT_SECRET']
     }).body
 
-    # TODO: Change this so we don't write duplicates if the installation happens multiple times.
-    credential = OauthCredential.from_slack_response(JSON.parse response_body)
-    credential.save!
+    OauthCredential.upsert_from_slack_response JSON.parse(response_body)
 
     # TODO: Render something a little nicer here.
     'Ok - you can close this page now.'
