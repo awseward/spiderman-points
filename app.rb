@@ -65,6 +65,10 @@ class App < Sinatra::Base
 
     OauthCredential.upsert_from_slack_response JSON.parse(response_body)
 
+    redirect to('/install_complete')
+  end
+
+  get '/install_complete' do
     # TODO: Render something a little nicer here.
     'Ok - you can close this page now.'
   end
