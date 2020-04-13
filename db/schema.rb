@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_11_204231) do
+ActiveRecord::Schema.define(version: 2020_04_13_055905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "oauth_credentials", force: :cascade do |t|
+    t.string "app_id", null: false
+    t.string "team_id", null: false
+    t.string "access_token", null: false
+    t.string "scope", null: false
+    t.string "bot_user_id", null: false
+    t.string "authed_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_id", "app_id"], name: "no_duplicate_credentials", unique: true
+  end
 
   create_table "points", force: :cascade do |t|
     t.string "team_id", null: false
@@ -29,6 +41,7 @@ ActiveRecord::Schema.define(version: 2020_04_11_204231) do
     t.string "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["team_id", "user_id"], name: "no_duplicate_users", unique: true
   end
 
 end

@@ -78,8 +78,13 @@ class App < Sinatra::Base
 
     else
       SlackPresenters.response_for_invalid_command params
-
     end
+  rescue Point::SelfAwardedError
+    <<~MSG
+      Unfortunately, you can't award Spiderman Points to yourself. Nice try, though!
+
+      #{usage_suggestion params}
+    MSG
   end
 
   get '/oauth/slack' do
