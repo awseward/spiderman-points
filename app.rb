@@ -61,8 +61,9 @@ class App < Sinatra::Base
   get('/tos')     { todo }
   get('/privacy') { todo }
   get('/support') { todo }
-
   get('/install_complete') { erb :install_complete }
+
+  get('/dev/slash_command') { todo } if development?
 
   post '/slack/slash_command' do
     case params['text']
