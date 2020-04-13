@@ -13,9 +13,14 @@ class App < Sinatra::Base
   set :show_exceptions, development?
 
   def custom_error(error_code)
-    # Oof!
     @background_image_url = 'https://media.giphy.com/media/K96dWImE4eHVS/giphy.gif'
-    erb "errors/#{error_code}".to_sym
+    erb :"errors/#{error_code}"
+  end
+
+  def todo
+    @background_image_url = 'https://i.imgur.com/z8rTFgG.gif'
+    status 501
+    erb :'errors/under_construction'
   end
 
   error(404) { custom_error 404 }
@@ -52,6 +57,10 @@ class App < Sinatra::Base
   end
 
   get('/') { erb :index }
+
+  get('/tos')     { todo }
+  get('/privacy') { todo }
+  get('/support') { todo }
 
   get('/install_complete') { erb :install_complete }
 
