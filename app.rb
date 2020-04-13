@@ -9,10 +9,17 @@ Dir["#{Dir.pwd}/models/**/*.rb"].each { |file| require file }
 class App < Sinatra::Base
   include SlackRequestValidation
 
-  not_found do
-    status 404
-    nil
+  # Unnecessary, but handy when I need to turn it off locally
+  set :show_exceptions, development?
+
+  def custom_error(error_code)
+    # Oof!
+    @background_image_url = 'https://media.giphy.com/media/K96dWImE4eHVS/giphy.gif'
+    erb "errors/#{error_code}".to_sym
   end
+
+  error(404) { custom_error 404 }
+  error(500) { custom_error 500 }
 
   before '/slack/*' do
     validate_slack_token unless ENV['RACK_ENV'] == 'development'

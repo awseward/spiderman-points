@@ -3,6 +3,11 @@
   <head>
     <link rel="stylesheet" type="text/css" href="/style.css" />
     <script src="/index.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+      body {
+        background-image: url('<%= @background_image_url ? @background_image_url : 'https://media.giphy.com/media/l46Cnk4ZRTlfeI32o/giphy.gif' %>');
+      }
+    </style>
   </head>
   <body>
     <%= yield %>
