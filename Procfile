@@ -1,2 +1,2 @@
-web: bundle exec rackup -s puma -p ${PORT} config.ru
+web: ./scripts/server.sh
 release: bundle exec rake db:migrate
