@@ -1,0 +1,39 @@
+{
+  "entries": {
+    "brew": {
+      "entr": {
+        "version": "4.4",
+        "bottle": {
+          "cellar": ":any_skip_relocation",
+          "prefix": "/usr/local",
+          "files": {
+            "catalina": {
+              "url": "https://homebrew.bintray.com/bottles/entr-4.4.catalina.bottle.tar.gz",
+              "sha256": "98f508565c8dd087b780fda140099fca3afb457ca27fcf3864bb508c87c403cc"
+            },
+            "mojave": {
+              "url": "https://homebrew.bintray.com/bottles/entr-4.4.mojave.bottle.tar.gz",
+              "sha256": "d18935ecc0bf78504d6acd00b2adb889389af2586cafc2602e38599f2590183f"
+            },
+            "high_sierra": {
+              "url": "https://homebrew.bintray.com/bottles/entr-4.4.high_sierra.bottle.tar.gz",
+              "sha256": "25fba36721d2857ca91efc7b82a8cbe15ff0a83f20e9febe57648fc173377629"
+            }
+          }
+        }
+      }
+    }
+  },
+  "system": {
+    "macos": {
+      "mojave": {
+        "HOMEBREW_VERSION": "2.2.12",
+        "HOMEBREW_PREFIX": "/usr/local",
+        "Homebrew/homebrew-core": "8eddec63cc9915bb94c977e6c938b5bc866562a9",
+        "CLT": "10.3.0.0.1.1562985497",
+        "Xcode": "10.3",
+        "macOS": "10.14.6"
+      }
+    }
+  }
+}
