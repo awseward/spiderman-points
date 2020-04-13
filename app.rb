@@ -98,9 +98,9 @@ class App < Sinatra::Base
     redirect to('/install_complete')
   end
 
-  post '/dev/null' do
-    status 204
-  end
+  post('/dev/null') { 204 }
+
+  get('/*') { 404 }
 
   # start the server if ruby file executed directly
   run! if app_file == $0
