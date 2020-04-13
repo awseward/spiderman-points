@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
-app_port=${PORT:-4567}
+ru_port=${PORT:-4567}
+ru_server="${SERVER:-puma}"
 
-bundle exec rackup -p "${app_port}" config.ru
+bundle exec rackup --server "${ru_server}" --port "${ru_port}" config.ru
