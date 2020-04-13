@@ -119,4 +119,45 @@ module SlackPresenters
       #{SlackPresenters.usage_suggestion params}
     MSG
   end
+
+  def self.help(params, base_url:)
+    slash_command = params['command']
+    <<~MSG
+      You can use the slash command `#{slash_command}` to award Spiderman Points to your friends!
+
+      Specify who you'd like to award a Spiderman Point to and why, like this:
+      ```
+      #{slash_command} @uncle_ben for teaching me about power AND responsibility.
+      ```
+
+      Or this:
+      ```
+      #{slash_command} @jj_jameson because he always publishes the best pictures of Spiderman!
+      ```
+
+      Or if you wanna be vague, just go ahead and leave the reason off. That's fine.
+      ```
+      #{slash_command} @bonesaw
+      ```
+
+      Note that you can, and _should_ use the auto-completed username you get by starting with `@` and typing from there.
+
+
+
+      There are also a few subcommands:
+
+      ```
+      recent:     Display the 10 most recent Spiderman Points.
+      scoreboard: Display how many Spiderman Points everyone has given.
+      help:       See this same message. Again.
+      ```
+
+
+
+      If you have questions or concerns about privacy, see #{base_url}/privacy.
+
+      If you have an issue you'd like support with, see #{base_url}/support.
+
+    MSG
+  end
 end

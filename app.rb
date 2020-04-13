@@ -88,6 +88,10 @@ class App < Sinatra::Base
       scores = Point.scores(team_id: params['team_id'])
       SlackPresenters.scoreboard(params, scores)
 
+    when SlashCommand::TextMatchers::Help
+      base_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
+      SlackPresenters.help(params, base_url: base_url)
+
     when 'slack_auth_test'
       SlackPresenters.auth_test_result @slack_client.auth_test
 

@@ -18,14 +18,24 @@ module SlashCommand
 
     class Recent
       def self.===(text)
-        text.split(' ').first&.downcase == 'recent'
+        TextMatchers.first_term(text) == 'recent'
       end
     end
 
     class Scoreboard
       def self.===(text)
-        text.split(' ').first&.downcase == 'scoreboard'
+        TextMatchers.first_term(text) == 'scoreboard'
       end
+    end
+
+    class Help
+      def self.===(text)
+        TextMatchers.first_term(text) == 'help'
+      end
+    end
+
+    def self.first_term(text)
+      text&.split(' ')&.first&.downcase
     end
   end
 end
