@@ -16,6 +16,14 @@ class App < Sinatra::Base
 
   before '/slack/*' do
     validate_slack_token unless ENV['RACK_ENV'] == 'development'
+
+    @slack_client = begin
+      token = OauthCredential.team_access_code params['team_id']
+      client = Slack::Web::Client.new(token: token)
+      client.auth_test
+
+      client
+    end
   end
 
   get('/') { erb :index }
@@ -24,10 +32,6 @@ class App < Sinatra::Base
 
   post '/slack/slash_command' do
     puts params
-
-    Slack::Web::Client.new(
-      token: OauthCredential.team_access_code(params['team_id'])
-    ).auth_test
 
     user = User.find_by(
       team_id: params['team_id'],
@@ -64,6 +68,13 @@ class App < Sinatra::Base
     when SlashCommand::TextMatchers::Scoreboard
       scores = Point.scores(team_id: params['team_id'])
       SlackPresenters.scoreboard(params, scores)
+
+    when 'slack_auth_test'
+      <<~MSG
+        ```
+        #{@slack_client.auth_test.to_s}
+        ```
+      MSG
 
     else
       SlackPresenters.response_for_invalid_command params
