@@ -39,6 +39,7 @@ class App < Sinatra::Base
     case params['text']
     when SlashCommand::TextMatchers::Empty
       SlackPresenters.response_for_empty_command params
+
     when SlashCommand::TextMatchers::Award
       point = Point.from_slash_command params
       point.save!
@@ -49,11 +50,18 @@ class App < Sinatra::Base
       # NOTE: No response directly back to user required. The `nil` returned
       # here accomplishes that.
       nil
+
     when SlashCommand::TextMatchers::Recent
       points = Point.recent(team_id: params['team_id'])
       SlackPresenters.recent(params, points)
+
+    when SlashCommand::TextMatchers::Scoreboard
+      scores = Point.scores(team_id: params['team_id'])
+      SlackPresenters.scoreboard(params, scores)
+
     else
       SlackPresenters.response_for_invalid_command params
+
     end
   end
 

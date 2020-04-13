@@ -21,5 +21,11 @@ module SlashCommand
         text.split(' ').first&.downcase == 'recent'
       end
     end
+
+    class Scoreboard
+      def self.===(text)
+        text.split(' ').first&.downcase == 'scoreboard'
+      end
+    end
   end
 end

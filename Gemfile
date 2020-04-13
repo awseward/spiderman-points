@@ -5,11 +5,8 @@ source 'https://rubygems.org'
 
 gem 'activerecord'
 gem 'pg'
+gem 'pry'
 gem 'rake'
 gem 'rest-client'
 gem 'sinatra'
 gem 'sinatra-activerecord'
-
-group :development do
-  gem 'pry'
-end

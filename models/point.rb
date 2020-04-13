@@ -19,6 +19,15 @@ class Point < ActiveRecord::Base
   def self.recent(count: 10, **where_params)
     where(**where_params).
       order('created_at DESC').
-      limit(count)
+      limit(count).
+      sort_by(&:created_at)
+  end
+
+  def self.scores(team_id:)
+    where(team_id: team_id).
+      group('from_id').
+      count.
+      sort_by { |user_id, score| -score  }.
+      map { |user_id, count| { user_id: user_id, count: count } }
   end
 end

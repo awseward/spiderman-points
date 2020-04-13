@@ -84,4 +84,27 @@ module SlackPresenters
       Now, go on! Those Spiderman Points aren't going to give themselves out!
     MSG
   end
+
+  def self.scoreboard(params, scores)
+    if scores.empty?
+      return <<~MSG
+        Didn't find any Spiderman Points...
+
+        #{usage_suggestion params}
+      MSG
+    end
+
+    rendered_scores = scores.map.with_index do |score, index|
+      "#{index + 1}. #{render_id score[:user_id]} has given out `#{score[:count]}` Spiderman Points"
+    end.join "\n"
+
+    <<~MSG
+    👋 Here's what you all have been up to:
+
+    #{rendered_scores}
+
+
+    Pretty good! But can we do better?
+    MSG
+  end
 end
