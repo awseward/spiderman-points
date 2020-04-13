@@ -15,5 +15,11 @@ module SlashCommand
         !!( text =~ PATTERN )
       end
     end
+
+    class Recent
+      def self.===(text)
+        text.split(' ').first&.downcase == 'recent'
+      end
+    end
   end
 end

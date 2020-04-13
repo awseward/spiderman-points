@@ -15,4 +15,10 @@ class Point < ActiveRecord::Base
       reason:  reason
     )
   end
+
+  def self.recent(count: 10, **where_params)
+    where(**where_params).
+      order('created_at DESC').
+      limit(count)
+  end
 end

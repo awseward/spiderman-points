@@ -55,4 +55,33 @@ module SlackPresenters
   def self.render_id(id)
     "<@#{id}>"
   end
+
+  def self.recent(params, points)
+    if points.empty?
+      return <<~MSG
+        Didn't find any Spiderman Points...
+
+        #{usage_suggestion params}
+      MSG
+    end
+
+    rendered_points = points.
+      map do |point|
+        [
+          '*',
+          "#{render_id point.to_id} received ONE (1) Spiderman Point",
+          point.reason.present? ? "`#{point.reason}`" : nil,
+          "from #{render_id point.from_id}",
+        ].compact.join(' ')
+      end.
+      join "\n"
+
+    <<~MSG
+      Here the #{points.count} most recent Spiderman Points:
+
+      #{rendered_points}
+
+      Now, go on! Those Spiderman Points aren't going to give themselves out!
+    MSG
+  end
 end

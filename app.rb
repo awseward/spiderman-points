@@ -1,4 +1,3 @@
-require 'pry'
 require 'rest-client'
 require 'sinatra/base'
 require 'sinatra/activerecord'
@@ -50,6 +49,9 @@ class App < Sinatra::Base
       # NOTE: No response directly back to user required. The `nil` returned
       # here accomplishes that.
       nil
+    when SlashCommand::TextMatchers::Recent
+      points = Point.recent(team_id: params['team_id'])
+      SlackPresenters.recent(params, points)
     else
       SlackPresenters.response_for_invalid_command params
     end
