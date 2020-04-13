@@ -111,3 +111,12 @@ p.pitch {
     transform: translateX(-10px);
   }
 }
+
+.devtools-list {
+  list-style-position: inside;
+}
+
+.devtools-item {
+  list-style-position: inside;
+  font-size: 20pt;
+}

@@ -17,6 +17,10 @@ class App < Sinatra::Base
     erb :"errors/#{error_code}"
   end
 
+  def development?
+    self.class.development?
+  end
+
   def todo
     @background_image_url = 'https://i.imgur.com/z8rTFgG.gif'
     status 501
@@ -27,9 +31,8 @@ class App < Sinatra::Base
   error(500) { custom_error 500 }
 
   before '/slack/*' do
-    validate_slack_token unless ENV['RACK_ENV'] == 'development'
-
-    @slack_client = begin
+    validate_slack_token unless development?
+    @slack_client = unless development?
       token = OauthCredential.team_access_code params['team_id']
       client = Slack::Web::Client.new(token: token)
       client.auth_test
@@ -63,7 +66,17 @@ class App < Sinatra::Base
   get('/support') { todo }
   get('/install_complete') { erb :install_complete }
 
-  get('/dev/slash_command') { todo } if development?
+  if development?
+    get('/dev') { erb :'dev/index' }
+    get('/dev/slash_command') do
+      @slash_command = '/spiderman-points'
+      @response_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/dev/null"
+      @team_id = 'T12345'
+      @user_id = 'U12345'
+
+      erb :'dev/slash_command'
+    end
+  end
 
   post '/slack/slash_command' do
     case params['text']
