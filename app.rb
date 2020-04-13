@@ -26,26 +26,29 @@ class App < Sinatra::Base
     end
   end
 
+  before '/slack/slash_command' do
+    # Log the basics
+    puts "[#{params['team_id']}.#{params['user_id']}]: #{params['command']} #{params['text']}"
+
+    # Say hi if we need to
+    @user = User.find_by(
+      team_id: params['team_id'],
+      user_id: params['user_id']
+    )
+    unless @user.present?
+      whisper(
+        url: params['response_url'],
+        text: SlackPresenters.first_time_greeting(params)
+      )
+      @user = persist_user(params)
+    end
+  end
+
   get('/') { erb :index }
 
   get('/install_complete') { erb :install_complete }
 
   post '/slack/slash_command' do
-    puts params
-
-    user = User.find_by(
-      team_id: params['team_id'],
-      user_id: params['user_id']
-    )
-
-    unless user.present?
-      whisper(
-        url: params['response_url'],
-        text: SlackPresenters.first_time_greeting(params)
-      )
-      persist_user(params)
-    end
-
     case params['text']
     when SlashCommand::TextMatchers::Empty
       SlackPresenters.response_for_empty_command params
@@ -70,23 +73,15 @@ class App < Sinatra::Base
       SlackPresenters.scoreboard(params, scores)
 
     when 'slack_auth_test'
-      <<~MSG
-        ```
-        #{@slack_client.auth_test.to_s}
-        ```
-      MSG
+      SlackPresenters.auth_test_result @slack_client.auth_test
 
     else
       SlackPresenters.response_for_invalid_command params
+
     end
   rescue Awardable::SelfAwardedError
     SelfAwardedPoint.from_slash_command(params).save!
-
-    <<~MSG
-      Unfortunately, you can't award Spiderman Points to yourself. Nice try, though!
-
-      #{usage_suggestion params}
-    MSG
+    SlackPresenters.self_awarded_point_admonishment params
   end
 
   get '/oauth/slack' do

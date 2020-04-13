@@ -107,4 +107,16 @@ module SlackPresenters
     Pretty good! But can we do better?
     MSG
   end
+
+  def self.auth_test_result(result)
+    "```#{result}```"
+  end
+
+  def self.self_awarded_point_admonishment(params)
+    <<~MSG
+      Unfortunately, you can't award Spiderman Points to yourself. Nice try, though!
+
+      #{SlackPresenters.usage_suggestion params}
+    MSG
+  end
 end
