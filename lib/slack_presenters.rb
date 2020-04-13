@@ -49,7 +49,12 @@ module SlackPresenters
   end
 
   def self.usage_suggestion(params)
-    "Try awarding a Spiderman Point to someone via `#{params['command']} @<their_username>` !"
+    <<~MSG
+      Try awarding a Spiderman Point to someone via `#{params['command']} @someone just because` (don't forget to change `someone` to an actual username, though)!
+
+
+      If you'd like more detalied info, try `#{params['command']} help`.
+    MSG
   end
 
   def self.render_id(id)
