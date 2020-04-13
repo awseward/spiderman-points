@@ -1,6 +1,7 @@
 require 'rest-client'
 require 'sinatra/base'
 require 'sinatra/activerecord'
+require 'slack'
 
 Dir["#{Dir.pwd}/lib/**/*.rb"].each { |file| require file }
 Dir["#{Dir.pwd}/models/**/*.rb"].each { |file| require file }
@@ -23,6 +24,11 @@ class App < Sinatra::Base
 
   post '/slack/slash_command' do
     puts params
+
+    Slack::Web::Client.new(
+      token: OauthCredential.team_access_code(params['team_id'])
+    ).auth_test
+
     user = User.find_by(
       team_id: params['team_id'],
       user_id: params['user_id']

@@ -27,4 +27,8 @@ class OauthCredential < ActiveRecord::Base
       authed_user_id: response.dig('authed_user', 'id')
     }
   end
+
+  def self.team_access_code(team_id)
+    find_by(team_id: team_id).access_token
+  end
 end
