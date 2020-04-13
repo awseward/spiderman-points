@@ -50,7 +50,6 @@ class App < Sinatra::Base
       # NOTE: No response directly back to user required. The `nil` returned
       # here accomplishes that.
       nil
-
     else
       SlackPresenters.response_for_invalid_command params
     end
