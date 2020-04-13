@@ -41,17 +41,16 @@ module SlackPresenters
   end
 
   def self.first_time_greeting(params)
-    "Hi there, #{render_id params['user_id']}! It's a pleasure to meet you!"
+    "👋 Hi there, #{render_id params['user_id']}! It's a pleasure to meet you!"
   end
 
   def self.response_for_empty_command(params)
-    "Hi there! Not sure what to do? #{usage_suggestion params}"
+    "👋 Hi there! Not sure what to do? #{usage_suggestion params}"
   end
 
   def self.usage_suggestion(params)
     <<~MSG
-      Try awarding a Spiderman Point to someone via `#{params['command']} @someone just because` (don't forget to change `someone` to an actual username, though)!
-
+      Try awarding a Spiderman Point to someone via `#{params['command']} @someone` (don't forget to change `someone` to an actual username).
 
       If you'd like more detalied info, try `#{params['command']} help`.
     MSG
@@ -119,9 +118,7 @@ module SlackPresenters
 
   def self.self_awarded_point_admonishment(params)
     <<~MSG
-      Unfortunately, you can't award Spiderman Points to yourself. Nice try, though!
-
-      #{SlackPresenters.usage_suggestion params}
+      😬 Unfortunately, you can't award Spiderman Points to yourself. Nice try, though! #{usage_suggestion params}
     MSG
   end
 
@@ -129,6 +126,8 @@ module SlackPresenters
     slash_command = params['command']
     <<~MSG
       You can use the slash command `#{slash_command}` to award Spiderman Points to your friends!
+
+      >>> *Usage*
 
       Specify who you'd like to award a Spiderman Point to and why, like this:
       ```
@@ -149,7 +148,7 @@ module SlackPresenters
 
 
 
-      There are also a few subcommands:
+      *There are also a few subcommands:*
 
       ```
       recent:     Display the 10 most recent Spiderman Points.
@@ -158,6 +157,8 @@ module SlackPresenters
       ```
 
 
+
+      *Other*
 
       If you have questions or concerns about privacy, see #{base_url}/privacy.
 
