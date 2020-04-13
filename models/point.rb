@@ -1,23 +1,12 @@
 # frozen_string_literal: true
 
 class Point < ActiveRecord::Base
-  class SelfAwardedError < StandardError; end
+  extend Awardable
 
   def self.from_slash_command(params)
-    match   = params['text'].match SlashCommand::TextMatchers::Award::PATTERN
-    from_id = params['user_id']
-    to_id   = match[1]
-    raise SelfAwardedError if from_id == to_id
-    reason  = begin
-                raw = match[3]&.strip
-                raw == '' ? nil : raw
-              end
-    new(
-      team_id: params['team_id'],
-      from_id: from_id,
-      to_id:   to_id,
-      reason:  reason
-    )
+    hash = ingest_params(params)
+    raise Awardable::SelfAwardedError if hash[:from_id] == hash[:to_id]
+    new(**hash)
   end
 
   def self.recent(count: 10, **where_params)
