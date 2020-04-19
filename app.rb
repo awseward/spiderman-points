@@ -132,7 +132,12 @@ class App < Sinatra::Base
     redirect to('/install_complete')
   end
 
-  post('/dev/null') { 204 }
+  post('/dev/null') do
+    puts JSON.parse(request.body.read)
+    204
+  rescue
+    204
+  end
 
   get('/*') { 404 }
 
