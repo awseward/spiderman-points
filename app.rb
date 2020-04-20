@@ -8,6 +8,7 @@ Dir["#{Dir.pwd}/models/**/*.rb"].each { |file| require file }
 
 class App < Sinatra::Base
   include SlackRequestValidation
+  register Sinatra::DevelopmentRoutes if development?
 
   # Unnecessary, but handy when I need to turn it off locally
   set :show_exceptions, development?
@@ -29,6 +30,13 @@ class App < Sinatra::Base
 
   error(404) { custom_error 404 }
   error(500) { custom_error 500 }
+
+  get('/') { erb :index }
+
+  get('/tos')     { todo }
+  get('/privacy') { todo }
+  get('/support') { todo }
+  get('/install_complete') { erb :install_complete }
 
   before '/slack/*' do
     validate_slack_token unless development?
@@ -56,25 +64,6 @@ class App < Sinatra::Base
         text: SlackPresenters.first_time_greeting(params)
       )
       @user = persist_user(params)
-    end
-  end
-
-  get('/') { erb :index }
-
-  get('/tos')     { todo }
-  get('/privacy') { todo }
-  get('/support') { todo }
-  get('/install_complete') { erb :install_complete }
-
-  if development?
-    get('/dev') { erb :'dev/index' }
-    get('/dev/slash_command') do
-      @slash_command = '/spiderman-points'
-      @response_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/dev/null"
-      @team_id = 'T12345'
-      @user_id = 'U12345'
-
-      erb :'dev/slash_command'
     end
   end
 
@@ -130,13 +119,6 @@ class App < Sinatra::Base
     OauthCredential.upsert_from_slack_response JSON.parse(response_body)
 
     redirect to('/install_complete')
-  end
-
-  post('/dev/null') do
-    puts JSON.parse(request.body.read)
-    204
-  rescue
-    204
   end
 
   get('/*') { 404 }

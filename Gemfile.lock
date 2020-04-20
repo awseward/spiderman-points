@@ -18,10 +18,14 @@ GEM
     concurrent-ruby (1.1.6)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    eventmachine (1.2.7)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
+    faye-websocket (0.10.9)
+      eventmachine (>= 0.12.0)
+      websocket-driver (>= 0.5.1)
     gli (2.19.0)
     hashie (4.1.0)
     http-accept (1.7.0)
@@ -89,6 +93,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  faye-websocket
   pg
   pry
   pry-byebug

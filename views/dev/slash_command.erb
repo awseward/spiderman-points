@@ -1,91 +1,142 @@
-<h1>Slash Command</h1>
+<div class="pre-container">
+  <pre id="devtools-slash-command-output"/>
+</div>
 
-<div class="centerer">
+<div class="form-container">
   <form id="devtools-slash-command-form" >
-    TODO: Clean this junk up
     <ul class="devtools-list">
       <li>
-        <label for="text"><%= @slash_command %></label>
+        <label for="text" id="text-label"><%= @slash_command %></label>
         <input type="text" id="text" name="text" width="2000" />
       </li>
-      <li>
-        <label for="command">command</label>
-        <input class="extra_info" id="command" name="command" value="<%= @slash_command %>" />
-      </li>
-      <li>
-        <label for="response_url">response_url</label>
-        <input class="extra_info" id="response_url" name="response_url" value="<%= @response_url %>" />
-      i</li>
-      <li>
-        <label for="team_id">team_id</label>
-        <input class="extra_info" id="team_id" name="team_id" value="<%= @team_id %>" />
-      </li>
-      <li>
-        <label for="team_id">user_id</label>
-        <input class="extra_info" id="user_id" name="user_id" value="<%= @user_id %>" />
-      </li>
+      <details class="other_fields">
+        <summary>Other fields...</summary>
+        <div class="other-fields-container">
+          <li>
+            <label for="command">command</label>
+            <input class="extra_info" id="command" name="command" value="<%= @slash_command %>" />
+          </li>
+          <li>
+            <label for="response_url">response_url</label>
+            <input class="extra_info" id="response_url" name="response_url" value="<%= @response_url %>" />
+          </li>
+          <li>
+            <label for="team_id">team_id</label>
+            <input class="extra_info" id="team_id" name="team_id" value="<%= @team_id %>" />
+          </li>
+          <li>
+            <label for="team_id">user_id</label>
+            <input class="extra_info" id="user_id" name="user_id" value="<%= @user_id %>" />
+          </li>
+        </div>
+      </details>
     </ul>
     <button type="submit">Submit</button>
   </form>
 </div>
 
-<div class="pre-container">
-  <pre id="devtools-slash-command-output">Output will show up here...</pre>
-</div>
-
 <style>
-  .pre-container {
+  .pre-container, .form-container {
     margin: 0 auto;
     width: 1200px;
   }
 
-  #devtools-slash-command-form {
-    font-size: 20pt;
-    text-align: left;
-  }
-
-  input#text {
-    width: 500px;
-    padding: 10px;
-    font-size: 16pt;
-  }
-
-  input.extra_info {
-    width: 500px;
-    margin-top: 10;
-    padding: 8px;
-    font-size: 14pt;
-    color: #666;
-    font-weight: 100;
-  }
-
   #devtools-slash-command-output {
     width: 1200px;
-    min-height: 300px;
-    margin-top: 200px;
+    height: 600px;
     white-space: pre;
     text-align: left;
-    background-color: #333;
+    background-color: #333E;
     overflow: auto;
     padding: 20px;
-    font-size: 14pt;
+    font-size: 12pt;
+  }
+
+  #text-label {
+    text-align: right;
+    display: inline-block;
+    width: 15%;
+  }
+
+  #text {
+    width: 80%;
+    display: inline-block;
+  }
+
+  #devtools-slash-command-form {
+    text-align: left;
+  }
+
+  #devtools-slash-command-form li {
+    list-style-type: none;
+  }
+
+  .other-fields-container input {
+    width: 100%;
+  }
+
+  #devtools-slash-command-form input {
+    padding: 5px;
+    font-size: 12pt;
+    margin-bottom: 10px;
+  }
+
+  .other-fields-container {
+    padding: 10px 25px;
+  }
+
+  .other-fields-container ul li > * {
+    width: 75%;
   }
 </style>
 
-<script>
+<script type="text/javascript">
   // Adapted from https://web.archive.org/web/20200411011502/https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_forms_through_JavaScript#Using_FormData_bound_to_a_form_element
-  window.addEventListener("load", function () {
+  window.onload = function(){
+    const show = function(el) {
+      return function(params) {
+        const { headerColor, headerText, bodyText } = params;
+        const header = `${new Date().toISOString()} <span style="color: ${headerColor}; font-size: 10pt;">=== ${headerText}</span>`;
+        const body = `<div style="padding: 10px 20px; background-color: #222A; margin-top: -10px; white-space: pre-line;">${bodyText}</div>`
+        const msg = `<details open><summary>${header}</summary>\n${body}</details>`;
+
+        el.innerHTML = el.innerHTML + "\n" + msg;
+
+        el.scrollTo(0, el.scrollHeight);
+      };
+    }(document.getElementById('devtools-slash-command-output'));
+    const info = msg => show({
+      headerColor: '#AAAAAA',
+      headerText: '[info]',
+      bodyText: msg,
+    });
+    const warning = msg => show({
+      headerColor: '#FFDC00',
+      headerText: '[warning]',
+      bodyText: msg,
+    });
+
     function sendData() {
       const XHR = new XMLHttpRequest();
       // Bind the FormData object and the form element
       const FD = new FormData(form);
       // Define what happens on successful data submission
       XHR.addEventListener("load", function(event) {
-        output.innerText = event.target.responseText;
+        if (event.target.responseText != '') {
+          show({
+            headerColor: '#F012BE',
+            headerText: '[sync][ethereal]',
+            bodyText: event.target.responseText,
+          });
+        }
       });
       // Define what happens in case of error
       XHR.addEventListener("error", function( event ) {
-        alert('Oops! Something went wrong.');
+        show({
+          headerColor: '#FF4136',
+          headerText: '[error]',
+          bodyText: 'An unknown error occurred',
+        });
       });
       // Set up our request
       XHR.open("POST", "/slack/slash_command");
@@ -95,13 +146,59 @@
 
     // Access the form element...
     const form = document.getElementById("devtools-slash-command-form");
-    const output = document.getElementById("devtools-slash-command-output");
 
     // ...and take over its submit event.
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-
       sendData();
     });
-  });
+
+    (function(){
+      var wsUrl    = 'ws://' + window.location.host + '/';
+      var ws       = new WebSocket(wsUrl);
+      ws.onopen    = function() { info(`Socket opened on ${wsUrl}`); };
+      ws.onclose   = function() {
+        warning(`Socket closed on ${wsUrl}`);
+        info('TODO: Implement re-connect attempts here...');
+      };
+      ws.onmessage = function(m) {
+        const {
+          body,
+          __message_type__,
+        } = JSON.parse(m.data);
+
+        switch(__message_type__) {
+          case 'SLACK_RESPONSE':
+            const { text, response_type } = body;
+            show({
+              headerColor: '#01FF70',
+              headerText: `[async][${response_type}]`,
+              bodyText: text,
+            });
+            break;
+          case 'INFO':
+            info(body);
+            break;
+          default:
+            warning(`Received unknown message: ${m.data}`);
+            break;
+        }
+      };
+    })();
+
+    (function(input, label) {
+      const updateLabel = () => {
+        inputValue = input.value;
+        labelText = label.innerText;
+
+        if (inputValue !== labelText) {
+          label.innerText = inputValue;
+        }
+      };
+
+      input.addEventListener('change', updateLabel);
+      input.addEventListener('textInput', updateLabel);
+      input.addEventListener('input', updateLabel);
+    })(document.getElementById('command'), document.getElementById('text-label'));
+  }
 </script>

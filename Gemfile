@@ -4,6 +4,7 @@ ruby '2.7.1'
 source 'https://rubygems.org'
 
 gem 'activerecord'
+gem 'faye-websocket'
 gem 'pg'
 gem 'pry'
 gem 'pry-byebug'
