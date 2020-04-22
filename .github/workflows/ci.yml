@@ -16,10 +16,15 @@ jobs:
           --health-retries 5
     steps:
       - uses: actions/checkout@v2
-      - name: Stand up DB
+      - name: Check schema.rb
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          RACK_ENV: ci
         run: |
           bundle install \
-            && export RACK_ENV=ci \
             && bundle exec rake db:create \
             && bundle exec rake db:migrate \
             && git diff --color --exit-code
