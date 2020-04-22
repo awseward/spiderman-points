@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_13_055905) do
+ActiveRecord::Schema.define(version: 2020_04_22_045222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 2020_04_13_055905) do
     t.string "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "opted_out", default: false, null: false
     t.index ["team_id", "user_id"], name: "no_duplicate_users", unique: true
   end
 

@@ -63,7 +63,11 @@ class App < Sinatra::Base
         url: params['response_url'],
         text: Slack::Presenters.first_time_greeting(params)
       )
-      @user = persist_user(params)
+      @user = User.new(
+        team_id:   params['team_id'],
+        user_id:   params['user_id'],
+        opted_out: false
+      ).save!
     end
   end
 
@@ -142,12 +146,5 @@ class App < Sinatra::Base
       { text: text, response_type: response_type }.to_json,
       { content_type: 'application/json' }
     )
-  end
-
-  def persist_user(params)
-     User.new(
-       team_id: params['team_id'],
-       user_id: params['user_id']
-     ).save!
   end
 end
