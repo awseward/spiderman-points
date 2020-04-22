@@ -7,6 +7,15 @@ development:
   username: spiderman_points
   password: <%= ENV['SPIDERMAN_POINTS_DB_PASSWORD'] %>
 
+ci:
+  adapter: postgresql
+  database: spiderman_points_ci
+  encoding: utf8
+  host: postgres
+  port: 5432
+  username: postgres
+  password: postgres
+
 test:
   adapter: postgresql
   database: spiderman_points_test
