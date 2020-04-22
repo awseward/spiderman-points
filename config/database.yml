@@ -7,6 +7,15 @@ development:
   username: spiderman_points
   password: <%= ENV['SPIDERMAN_POINTS_DB_PASSWORD'] %>
 
+ci:
+  adapter: postgresql
+  database: spiderman_points_ci
+  encoding: utf8
+  host:     <%= ENV.fetch('POSTGRES_HOST',     'postgres') %>
+  port:     <%= ENV.fetch('POSTGRES_PORT',           5432) %>
+  username: <%= ENV.fetch('POSTGRES_USERNAME', 'postgres') %>
+  password: <%= ENV.fetch('POSTGRES_PASSWORD', 'postgres') %>
+
 test:
   adapter: postgresql
   database: spiderman_points_test

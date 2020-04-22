@@ -1,0 +1,33 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    container: ruby:2.7.1
+    services:
+      postgres:
+        image: postgres:12.2
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check schema.rb
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          RACK_ENV: ci
+        run: |
+          bundle install \
+            && bundle exec rake db:create \
+            && bundle exec rake db:migrate \
+            && git diff --color --exit-code
