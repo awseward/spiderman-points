@@ -113,10 +113,12 @@ class App < Sinatra::Base
       Slack::Presenters.help(params, base_url: base_url)
 
     when Slack::SlashCommand::TextMatchers::Opt::Out
-      'TODO: opt out'
+      @user.update_attributes(opted_out: true)
+      Slack::Presenters.opt_out_successful params
 
     when Slack::SlashCommand::TextMatchers::Opt::In
-      'TODO: opt in'
+      @user.update_attributes(opted_out: false)
+      Slack::Presenters.opt_in_successful
 
     when 'slack_auth_test'
       Slack::Presenters.auth_test_result @slack_client.auth_test

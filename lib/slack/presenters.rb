@@ -165,6 +165,19 @@ module Slack
       MSG
     end
 
+    def self.opt_out_successful(params)
+      <<~MSG
+        You'll no longer receive any Spiderman Points. If you change your mind, you can opt back in via
+        ```
+        #{params['command']} opt in
+        ```
+      MSG
+    end
+
+    def self.opt_in_successful
+      "You're set to receive Spiderman Points!"
+    end
+
     def self.recipient_has_opted_out(user_id)
       "😶 I'm sorry, but #{render_id user_id} has opted out of receiving Spiderman Points."
     end
