@@ -150,9 +150,10 @@ module Slack
         *There are also a few subcommands:*
 
         ```
-        recent:     Display the 10 most recent Spiderman Points.
-        scoreboard: Display how many Spiderman Points everyone has given.
-        help:       See this same message. Again.
+        recent:       Display the 10 most recent Spiderman Points.
+        scoreboard:   Display how many Spiderman Points everyone has given.
+        opt <in|out>: Opt in or out of receiving Spiderman Points.
+        help:         See this same message. Again.
         ```
 
 
