@@ -63,7 +63,11 @@ class App < Sinatra::Base
         url: params['response_url'],
         text: Slack::Presenters.first_time_greeting(params)
       )
-      @user = persist_user(params)
+      @user = User.new(
+        team_id:   params['team_id'],
+        user_id:   params['user_id'],
+        opted_out: false
+      ).save!
     end
   end
 
@@ -74,11 +78,24 @@ class App < Sinatra::Base
 
     when Slack::SlashCommand::TextMatchers::Award
       point = Point.from_slash_command params
-      point.save!
-      speak(
-        url: params['response_url'],
-        text: Slack::Presenters.award_announcement(point)
+      recipient = User.find_by(
+        team_id: params['team_id'],
+        user_id: point.to_id
       )
+
+      if recipient.present? && recipient.opted_out
+        whisper(
+          url: params['response_url'],
+          text: Slack::Presenters.recipient_has_opted_out(recipient.id)
+        )
+      else
+        point.save!
+        speak(
+          url: params['response_url'],
+          text: Slack::Presenters.award_announcement(point)
+        )
+      end
+
       # NOTE: No response directly back to user required. The `nil` returned
       # here accomplishes that.
       nil
@@ -94,6 +111,14 @@ class App < Sinatra::Base
     when Slack::SlashCommand::TextMatchers::Help
       base_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
       Slack::Presenters.help(params, base_url: base_url)
+
+    when Slack::SlashCommand::TextMatchers::Opt::Out
+      @user.update_attributes(opted_out: true)
+      Slack::Presenters.opt_out_successful params
+
+    when Slack::SlashCommand::TextMatchers::Opt::In
+      @user.update_attributes(opted_out: false)
+      Slack::Presenters.opt_in_successful
 
     when 'slack_auth_test'
       Slack::Presenters.auth_test_result @slack_client.auth_test
@@ -142,12 +167,5 @@ class App < Sinatra::Base
       { text: text, response_type: response_type }.to_json,
       { content_type: 'application/json' }
     )
-  end
-
-  def persist_user(params)
-     User.new(
-       team_id: params['team_id'],
-       user_id: params['user_id']
-     ).save!
   end
 end

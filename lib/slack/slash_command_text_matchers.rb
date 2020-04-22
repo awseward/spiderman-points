@@ -35,8 +35,27 @@ module Slack
         end
       end
 
+      module Opt
+        class In
+          def self.===(text)
+            TextMatchers.first_two_terms(text) == %w[ opt in ]
+          end
+        end
+
+        class Out
+          def self.===(text)
+            TextMatchers.first_two_terms(text) == %w[ opt out ]
+          end
+        end
+      end
+
       def self.first_term(text)
         text&.split(' ')&.first&.downcase
+      end
+
+      def self.first_two_terms(text)
+        fst, snd = text&.split(' ')
+        [fst, snd].compact.map { |str| str.strip.downcase }
       end
     end
   end

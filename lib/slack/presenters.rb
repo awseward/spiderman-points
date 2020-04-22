@@ -150,9 +150,10 @@ module Slack
         *There are also a few subcommands:*
 
         ```
-        recent:     Display the 10 most recent Spiderman Points.
-        scoreboard: Display how many Spiderman Points everyone has given.
-        help:       See this same message. Again.
+        recent:       Display the 10 most recent Spiderman Points.
+        scoreboard:   Display how many Spiderman Points everyone has given.
+        opt <in|out>: Opt in or out of receiving Spiderman Points.
+        help:         See this same message. Again.
         ```
 
 
@@ -163,6 +164,23 @@ module Slack
 
         If you have an issue you'd like support with, see #{base_url}/support.
       MSG
+    end
+
+    def self.opt_out_successful(params)
+      <<~MSG
+        You'll no longer receive any Spiderman Points. If you change your mind, you can opt back in via
+        ```
+        #{params['command']} opt in
+        ```
+      MSG
+    end
+
+    def self.opt_in_successful
+      "You're set to receive Spiderman Points!"
+    end
+
+    def self.recipient_has_opted_out(user_id)
+      "😶 I'm sorry, but #{render_id user_id} has opted out of receiving Spiderman Points."
     end
   end
 end
