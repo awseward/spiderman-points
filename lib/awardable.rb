@@ -7,7 +7,7 @@ module Awardable
   end
 
   def ingest_params(params)
-    match  = params['text'].match SlashCommand::TextMatchers::Award::PATTERN
+    match  = params['text'].match Slack::SlashCommand::TextMatchers::Award::PATTERN
     reason = begin
                raw = match[3]&.strip
                raw == '' ? nil : raw
