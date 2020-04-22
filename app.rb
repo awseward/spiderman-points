@@ -7,7 +7,7 @@ Dir["#{Dir.pwd}/lib/**/*.rb"].each { |file| require file }
 Dir["#{Dir.pwd}/models/**/*.rb"].each { |file| require file }
 
 class App < Sinatra::Base
-  include SlackRequestValidation
+  include Slack::RequestValidation
   register Sinatra::DevelopmentRoutes if development?
 
   # Unnecessary, but handy when I need to turn it off locally
@@ -61,7 +61,7 @@ class App < Sinatra::Base
     unless @user.present?
       whisper(
         url: params['response_url'],
-        text: SlackPresenters.first_time_greeting(params)
+        text: Slack::Presenters.first_time_greeting(params)
       )
       @user = persist_user(params)
     end
@@ -69,42 +69,42 @@ class App < Sinatra::Base
 
   post '/slack/slash_command' do
     case params['text']
-    when SlashCommand::TextMatchers::Empty
-      SlackPresenters.response_for_empty_command params
+    when Slack::SlashCommand::TextMatchers::Empty
+      Slack::Presenters.response_for_empty_command params
 
-    when SlashCommand::TextMatchers::Award
+    when Slack::SlashCommand::TextMatchers::Award
       point = Point.from_slash_command params
       point.save!
       speak(
         url: params['response_url'],
-        text: SlackPresenters.award_announcement(point)
+        text: Slack::Presenters.award_announcement(point)
       )
       # NOTE: No response directly back to user required. The `nil` returned
       # here accomplishes that.
       nil
 
-    when SlashCommand::TextMatchers::Recent
+    when Slack::SlashCommand::TextMatchers::Recent
       points = Point.recent(team_id: params['team_id'])
-      SlackPresenters.recent(params, points)
+      Slack::Presenters.recent(params, points)
 
-    when SlashCommand::TextMatchers::Scoreboard
+    when Slack::SlashCommand::TextMatchers::Scoreboard
       scores = Point.scores(team_id: params['team_id'])
-      SlackPresenters.scoreboard(params, scores)
+      Slack::Presenters.scoreboard(params, scores)
 
-    when SlashCommand::TextMatchers::Help
+    when Slack::SlashCommand::TextMatchers::Help
       base_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
-      SlackPresenters.help(params, base_url: base_url)
+      Slack::Presenters.help(params, base_url: base_url)
 
     when 'slack_auth_test'
-      SlackPresenters.auth_test_result @slack_client.auth_test
+      Slack::Presenters.auth_test_result @slack_client.auth_test
 
     else
-      SlackPresenters.response_for_invalid_command params
+      Slack::Presenters.response_for_invalid_command params
 
     end
   rescue Awardable::SelfAwardedError
     SelfAwardedPoint.from_slash_command(params).save!
-    SlackPresenters.self_awarded_point_admonishment params
+    Slack::Presenters.self_awarded_point_admonishment params
   end
 
   get '/oauth/slack' do
