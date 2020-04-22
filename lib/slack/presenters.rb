@@ -164,5 +164,9 @@ module Slack
         If you have an issue you'd like support with, see #{base_url}/support.
       MSG
     end
+
+    def self.recipient_has_opted_out(user_id)
+      "😶 I'm sorry, but #{render_id user_id} has opted out of receiving Spiderman Points."
+    end
   end
 end

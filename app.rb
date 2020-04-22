@@ -78,11 +78,24 @@ class App < Sinatra::Base
 
     when Slack::SlashCommand::TextMatchers::Award
       point = Point.from_slash_command params
-      point.save!
-      speak(
-        url: params['response_url'],
-        text: Slack::Presenters.award_announcement(point)
+      recipient = User.find_by(
+        team_id: params['team_id'],
+        user_id: point.to_id
       )
+
+      if recipient.present? && recipient.opted_out
+        whisper(
+          url: params['response_url'],
+          text: Slack::Presenters.recipient_has_opted_out(recipient.id)
+        )
+      else
+        point.save!
+        speak(
+          url: params['response_url'],
+          text: Slack::Presenters.award_announcement(point)
+        )
+      end
+
       # NOTE: No response directly back to user required. The `nil` returned
       # here accomplishes that.
       nil
