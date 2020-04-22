@@ -36,6 +36,14 @@ ActiveRecord::Schema.define(version: 2020_04_13_055905) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "self_awarded_points", id: :serial, force: :cascade do |t|
+    t.text "team_id", null: false
+    t.text "user_id", null: false
+    t.text "reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "team_id", null: false
     t.string "user_id", null: false
