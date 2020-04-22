@@ -99,6 +99,12 @@ class App < Sinatra::Base
       base_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
       Slack::Presenters.help(params, base_url: base_url)
 
+    when Slack::SlashCommand::TextMatchers::Opt::Out
+      'TODO: opt out'
+
+    when Slack::SlashCommand::TextMatchers::Opt::In
+      'TODO: opt in'
+
     when 'slack_auth_test'
       Slack::Presenters.auth_test_result @slack_client.auth_test
 
