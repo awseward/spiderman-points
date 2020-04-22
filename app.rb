@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rest-client'
 require 'sinatra/base'
 require 'sinatra/activerecord'
@@ -53,16 +55,15 @@ class App < Sinatra::Base
     # Log the basics
     puts "[#{params['team_id']}.#{params['user_id']}]: #{params['command']} #{params['text']}"
 
-    # Say hi if we need to
     @user = User.find_by(
       team_id: params['team_id'],
       user_id: params['user_id']
     )
+    @responder = Slack::Responder.for_params params
+
+    # Say hi if we need to
     unless @user.present?
-      whisper(
-        url: params['response_url'],
-        text: Slack::Presenters.first_time_greeting(params)
-      )
+      @responder.ephemeral Slack::Presenters.first_time_greeting(params)
       @user = User.new(
         team_id:   params['team_id'],
         user_id:   params['user_id'],
@@ -84,16 +85,12 @@ class App < Sinatra::Base
       )
 
       if recipient.present? && recipient.opted_out
-        whisper(
-          url: params['response_url'],
-          text: Slack::Presenters.recipient_has_opted_out(recipient.id)
+        @responder.ephemeral(
+          Slack::Presenters.recipient_has_opted_out(recipient.id)
         )
       else
         point.save!
-        speak(
-          url: params['response_url'],
-          text: Slack::Presenters.award_announcement(point)
-        )
+        @responder.in_channel Slack::Presenters.award_announcement(point)
       end
 
       # NOTE: No response directly back to user required. The `nil` returned
@@ -150,22 +147,4 @@ class App < Sinatra::Base
 
   # start the server if ruby file executed directly
   run! if app_file == $0
-
-  private
-
-  def whisper(**args)
-    post_response( **args.merge(response_type: 'ephemeral') )
-  end
-
-  def speak(**args)
-    post_response( **args.merge(response_type: 'in_channel') )
-  end
-
-  def post_response(url:, text:, response_type:)
-    RestClient.post(
-      url,
-      { text: text, response_type: response_type }.to_json,
-      { content_type: 'application/json' }
-    )
-  end
 end
