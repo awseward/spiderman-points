@@ -3,10 +3,12 @@ module Slack
     def self.award_announcement(point)
       announcement = "#{render_id point.from_id} has awarded ONE (1) Spiderman Point to #{render_id point.to_id}!"
       announcement = if point.reason.present?
+                       reason = point.reason.each_line.map { |line| "> #{line.strip}" }.join "\n"
+
                        <<~MSG
                         #{announcement} Why?
 
-                        > #{point.reason}
+                        #{reason}
                        MSG
                      else
                        announcement
