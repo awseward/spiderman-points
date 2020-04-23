@@ -10,7 +10,7 @@ module Slack
       end
 
       class Award
-        PATTERN = /<@([A-Z][A-Z0-9]+)(\|[^>]*)?>(.*)/
+        PATTERN = /<@([A-Z][A-Z0-9]+)(\|[^>]*)?>(.*)/m
 
         def self.===(text)
           !!( text =~ PATTERN )
