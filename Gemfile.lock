@@ -55,7 +55,7 @@ GEM
     rack (2.2.3)
     rack-protection (2.1.0)
       rack
-    rake (13.0.1)
+    rake (13.0.3)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
@@ -104,7 +104,7 @@ DEPENDENCIES
   slack-ruby-client
 
 RUBY VERSION
-   ruby 2.7.2p137
+   ruby 3.0.0p0
 
 BUNDLED WITH
-   2.1.4
+   2.2.3
