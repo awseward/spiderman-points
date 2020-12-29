@@ -32,7 +32,7 @@ module Slack
       MSG
     end
 
-    def self.response_for_invalid_command(params)
+    def self.response_for_invalid_command(params) =
       <<~MSG
         🤔 Sorry, I couldn't tell what you meant when you sent this:
         ```
@@ -41,27 +41,22 @@ module Slack
 
         #{usage_suggestion params}
       MSG
-    end
 
-    def self.first_time_greeting(params)
+    def self.first_time_greeting(params) =
       "👋 Hi there, #{render_id params['user_id']}! It's a pleasure to meet you!"
-    end
 
-    def self.response_for_empty_command(params)
-      "👋 Hi there! Not sure what to do? #{usage_suggestion params}"
-    end
+    def self.response_for_empty_command(...) =
+      "👋 Hi there! Not sure what to do? #{usage_suggestion(...)}"
 
-    def self.usage_suggestion(params)
+    def self.usage_suggestion(params) =
       <<~MSG
         Try awarding a Spiderman Point to someone via `#{params['command']} @someone` (don't forget to change `someone` to an actual username).
+    end
 
         If you'd like more detalied info, try `#{params['command']} help`.
       MSG
-    end
 
-    def self.render_id(id)
-      "<@#{id}>"
-    end
+    def self.render_id(id) = "<@#{id}>"
 
     def self.recent(params, points)
       if points.empty?
@@ -115,13 +110,10 @@ module Slack
       MSG
     end
 
-    def self.auth_test_result(result)
-      "```#{result}```"
-    end
+    def self.auth_test_result(result) = "```#{result}```"
 
-    def self.self_awarded_point_admonishment(params)
+    def self.self_awarded_point_admonishment(params) =
       "😬 Unfortunately, you can't award Spiderman Points to yourself. Nice try, though! #{usage_suggestion params}"
-    end
 
     def self.help(params, base_url:)
       slash_command = params['command']
@@ -168,21 +160,17 @@ module Slack
       MSG
     end
 
-    def self.opt_out_successful(params)
+    def self.opt_out_successful(params) =
       <<~MSG
         You'll no longer receive any Spiderman Points. If you change your mind, you can opt back in via
         ```
         #{params['command']} opt in
         ```
       MSG
-    end
 
-    def self.opt_in_successful
-      "You're set to receive Spiderman Points!"
-    end
+    def self.opt_in_successful = "You're set to receive Spiderman Points!"
 
-    def self.recipient_has_opted_out(user_id)
+    def self.recipient_has_opted_out(user_id) =
       "😶 I'm sorry, but #{render_id user_id} has opted out of receiving Spiderman Points."
-    end
   end
 end
