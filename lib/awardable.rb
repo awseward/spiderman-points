@@ -2,9 +2,7 @@
 module Awardable
   class SelfAwardedError < StandardError; end
 
-  def from_slash_command(params)
-    new(**ingest_params(params))
-  end
+  def from_slash_command(...) = new(**ingest_params(...))
 
   def ingest_params(params)
     match  = params['text'].match Slack::SlashCommand::TextMatchers::Award::PATTERN
@@ -19,7 +17,5 @@ module Awardable
     }.merge ingest_participant_ids( **participant_ids )
   end
 
-  def ingest_participant_ids(**keywords)
-    keywords
-  end
+  def ingest_participant_ids(**keywords) = keywords
 end

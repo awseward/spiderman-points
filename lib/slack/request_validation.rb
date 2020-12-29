@@ -30,14 +30,10 @@ module Slack
       end
     end
 
-    def get_header(key)
-      # X-Foo-Bar => HTTP_X_FOO_BAR
-      request.env["HTTP_#{key.upcase.gsub('-', '_')}"]
-    end
+    # X-Foo-Bar => HTTP_X_FOO_BAR
+    def get_header(key) = request.env["HTTP_#{key.upcase.gsub('-', '_')}"]
 
-    def slack_request_too_old?(timestamp)
-      # if over 5 minutes it can be a replay attack
-      (Time.now.to_i - timestamp).abs > (60 * 5)
-    end
+    # if over 5 minutes it can be a replay attack
+    def slack_request_too_old?(timestamp) = (Time.now.to_i - timestamp).abs > (60 * 5)
   end
 end
