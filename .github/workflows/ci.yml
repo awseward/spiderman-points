@@ -6,7 +6,7 @@ on:
 jobs:
   schema:
     runs-on: ubuntu-latest
-    container: ruby:2.7.2
+    container: ruby:3.0.0
     services:
       postgres:
         image: postgres:12.2
