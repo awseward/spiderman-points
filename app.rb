@@ -20,9 +20,7 @@ class App < Sinatra::Base
     erb :"errors/#{error_code}"
   end
 
-  def development?
-    self.class.development?
-  end
+  def development? = self.class.development?
 
   def todo
     @background_image_url = 'https://i.imgur.com/z8rTFgG.gif'
