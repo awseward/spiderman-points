@@ -1,6 +1,6 @@
 let imports = ../imports.dhall
 
-let GHA = ../GHA.dhall
+let GHA = imports.GHA
 
 let fmtOptions = imports.Text.concatSep " "
 
