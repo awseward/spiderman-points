@@ -4,14 +4,30 @@ let GHA = imports.GHA
 
 let Job = GHA.Job
 
+let On = GHA.On
+
 let Service = GHA.Service
 
 let Step = GHA.Step
 
+let Workflow = GHA.Workflow
+
 let fmtOptions = imports.Text.concatSep " "
 
-in  { name = "CI"
-    , on.pull_request.branches = [ "master" ]
+in  Workflow::{
+    , name = "CI"
+    , on =
+        On.map
+          ( toMap
+              { pull_request =
+                  On.pushPull
+                    ( On.PushPull.fix
+                        On.PushPull::{
+                        , branches = Some (On.PushPull.include [ "master" ])
+                        }
+                    )
+              }
+          )
     , jobs = toMap
         { schema = Job::{
           , runs-on = [ "ubuntu-latest" ]
