@@ -2,11 +2,7 @@ let imports = ../imports.dhall
 
 let GHA = imports.GHA
 
-let Job = GHA.Job
-
 let On = GHA.On
-
-let Service = GHA.Service
 
 let Step = GHA.Step
 
@@ -22,11 +18,11 @@ in  Workflow::{
               On.PushPull::{ branches = On.include [ "master", "main" ] }
           ]
     , jobs = toMap
-        { schema = Job::{
+        { schema = GHA.Job::{
           , runs-on = [ "ubuntu-latest" ]
           , container = Some "ruby:3.0.0"
           , services = toMap
-              { postgres = Service::{
+              { postgres = GHA.Service::{
                 , image = Some "postgres:12.4"
                 , env = toMap { POSTGRES_PASSWORD = "postgres" }
                 , options = Some
