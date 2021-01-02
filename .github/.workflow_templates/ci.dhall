@@ -4,7 +4,23 @@ let GHA = imports.GHA
 
 let Job = GHA.Job
 
-let On = GHA.On
+let On =
+      let base = GHA.On
+
+      let _mkPushPull =
+            λ(name : Text) →
+            λ(cfg : base.PushPull.Type) →
+              { mapKey = name
+              , mapValue = base.pushPull (base.PushPull.fix cfg)
+              }
+
+      in    base
+          ⫽ { include = λ(xs : List Text) → Some (base.PushPull.include xs)
+            , ignore = λ(xs : List Text) → Some (base.PushPull.ignore xs)
+            , _mkPushPull
+            , push = _mkPushPull "push"
+            , pullRequest = _mkPushPull "pull_request"
+            }
 
 let Service = GHA.Service
 
@@ -18,16 +34,9 @@ in  Workflow::{
     , name = "CI"
     , on =
         On.map
-          ( toMap
-              { pull_request =
-                  On.pushPull
-                    ( On.PushPull.fix
-                        On.PushPull::{
-                        , branches = Some (On.PushPull.include [ "master" ])
-                        }
-                    )
-              }
-          )
+          [ On.pullRequest
+              On.PushPull::{ branches = On.include [ "master", "main" ] }
+          ]
     , jobs = toMap
         { schema = Job::{
           , runs-on = [ "ubuntu-latest" ]
