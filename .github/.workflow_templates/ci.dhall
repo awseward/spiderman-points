@@ -4,23 +4,7 @@ let GHA = imports.GHA
 
 let Job = GHA.Job
 
-let On =
-      let base = GHA.On
-
-      let _mkPushPull =
-            λ(name : Text) →
-            λ(cfg : base.PushPull.Type) →
-              { mapKey = name
-              , mapValue = base.pushPull (base.PushPull.fix cfg)
-              }
-
-      in    base
-          ⫽ { include = λ(xs : List Text) → Some (base.PushPull.include xs)
-            , ignore = λ(xs : List Text) → Some (base.PushPull.ignore xs)
-            , _mkPushPull
-            , push = _mkPushPull "push"
-            , pullRequest = _mkPushPull "pull_request"
-            }
+let On = GHA.On
 
 let Service = GHA.Service
 

@@ -3,5 +3,5 @@
 , Text =
     https://raw.githubusercontent.com/dhall-lang/dhall-lang/v20.0.0/Prelude/Text/package.dhall sha256:46c53957c10bd4c332a5716d6e06068cd24ae1392ca171e6da31e30b9b33c07c
 , GHA =
-    https://raw.githubusercontent.com/awseward/dhall-misc/gha-on/GHA/package.dhall sha256:5226600f9cee9d1f17aab86c45e34fc211150f424f40fa195479b60f98bacafd
+    https://raw.githubusercontent.com/awseward/dhall-misc/gha-on/GHA/package.dhall sha256:c646e22542997a419218871938b9c902aeb9ed134116ad0e5ca06bd119d2c663
 }
