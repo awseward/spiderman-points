@@ -28,7 +28,7 @@ in  Workflow::{
                 , image = Some "postgres:12.4"
                 , env = toMap { POSTGRES_PASSWORD = "postgres" }
                 , options = Some
-                    ( imports.Text.concatSep
+                    ( imports.Prelude.Text.concatSep
                         " "
                         [ "--health-cmd pg_isready"
                         , "--health-interval 10s"
