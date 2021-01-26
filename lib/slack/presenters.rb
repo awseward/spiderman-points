@@ -1,6 +1,6 @@
 module Slack
   module Presenters
-    def self.award_announcement(point)
+    def self.award_announcement(point, total_points)
       announcement = "#{render_id point.from_id} has awarded ONE (1) Spiderman Point to #{render_id point.to_id}!"
       announcement = if point.reason.present?
                        reason = point.reason.each_line.map { |line| "> #{line.strip}" }.join "\n"
@@ -13,10 +13,7 @@ module Slack
                      else
                        announcement
                      end
-      # FIXME: It's a pretty terrible idea to put a query like this in this
-      # method, but for now it _really_ doesn't matter. Just please revisit this
-      # sometime in the future.
-      total_points = Point.where(team_id: point.team_id, to_id: point.to_id).count
+
       points_token = if total_points == 1
                        "your first Spiderman Point"
                      elsif total_points > 1
