@@ -83,9 +83,7 @@ module Slack
         PizzaTime,
       ]
 
-      def self.random(point, total_points)
-        KLASSES.sample.render point, total_points
-      end
+      def self.random(...) = KLASSES.sample.render(...)
     end
   end
 end
