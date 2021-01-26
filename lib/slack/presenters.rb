@@ -1,8 +1,6 @@
 module Slack
   module Presenters
-    def self.award_announcement(point, total_points)
-      AwardAnnouncement.random(point, total_points)
-    end
+    def self.award_announcement(...) = AwardAnnouncement.random(...)
 
     def self.response_for_invalid_command(params) =
       <<~MSG
