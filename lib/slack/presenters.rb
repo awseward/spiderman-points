@@ -1,32 +1,7 @@
 module Slack
   module Presenters
     def self.award_announcement(point, total_points)
-      announcement = "#{render_id point.from_id} has awarded ONE (1) Spiderman Point to #{render_id point.to_id}!"
-      announcement = if point.reason.present?
-                       reason = point.reason.each_line.map { |line| "> #{line.strip}" }.join "\n"
-
-                       <<~MSG
-                        #{announcement} Why?
-
-                        #{reason}
-                       MSG
-                     else
-                       announcement
-                     end
-
-      points_token = if total_points == 1
-                       "your first Spiderman Point"
-                     elsif total_points > 1
-                       "#{total_points} Spiderman Points"
-                     else
-                       raise "ERR ENOSPIDERMANPOINTS: Replace this with a better error maybe"
-                     end
-
-      <<~MSG
-        #{announcement}
-
-        🎉 Congratulations, #{render_id point.to_id}, you now have #{points_token}! We're all so proud of you, keep it up!!!
-      MSG
+      AwardAnnouncement.random(point, total_points)
     end
 
     def self.response_for_invalid_command(params) =
