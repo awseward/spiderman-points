@@ -21,7 +21,6 @@ module Slack
     def self.usage_suggestion(params) =
       <<~MSG
         Try awarding a Spiderman Point to someone via `#{params['command']} @someone` (don't forget to change `someone` to an actual username).
-    end
 
         If you'd like more detalied info, try `#{params['command']} help`.
       MSG
