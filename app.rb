@@ -88,7 +88,8 @@ class App < Sinatra::Base
         )
       else
         point.save!
-        @responder.in_channel Slack::Presenters.award_announcement(point)
+        total_points = Point.where(team_id: point.team_id, to_id: point.to_id).count
+        @responder.in_channel Slack::Presenters.award_announcement(point, total_points)
       end
 
       # NOTE: No response directly back to user required. The `nil` returned
