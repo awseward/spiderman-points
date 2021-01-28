@@ -4,7 +4,7 @@ module Slack
     module Formatting
       def render_id(id) = "<@#{id}>"
 
-      def render_quote(reason) = reason.each_line.map { |line| "> #{line.strip}" }.join("\n")
+      def render_quote(text) = text.each_line.map { |line| "> #{line.strip}" }.join("\n")
 
       def one_or_many(quantity, one_val)
         # TODO: Maybe a slightly better error?
@@ -16,6 +16,15 @@ module Slack
           yield quantity
         end
       end
+
+      def with_reason(point, message)
+        reason = point.reason
+        if reason.present?
+          yield [reason]
+        else
+          message
+        end
+      end
     end
 
     module AwardAnnouncement
@@ -23,23 +32,27 @@ module Slack
         extend Slack::Presenters::Formatting
 
         def self.render(point, total_points)
-          'TODO'
+          :FIXME
         end
+      end
+
+      class Lorem
+        extend Slack::Presenters::Formatting
+
+        def self.render(point, total_points) =
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et #{render_id point.to_id} habet #{total_points} Spidermanus Pointiae"
       end
 
       class Classic
         extend Slack::Presenters::Formatting
 
         def self.render(point, total_points)
-          announcement = "#{render_id point.from_id} has awarded ONE (1) Spiderman Point to #{render_id point.to_id}!"
-          announcement = if point.reason.present?
+          message = "#{render_id point.from_id} has awarded ONE (1) Spiderman Point to #{render_id point.to_id}!"
+          message = with_reason(point, message) do
             <<~MSG
-             #{announcement} Why?
-
+             #{message} Why?
              #{render_quote point.reason}
             MSG
-          else
-            announcement
           end
 
           points_token = one_or_many(
@@ -48,9 +61,7 @@ module Slack
           ) { |many| "#{many} Spiderman Points" }
 
           <<~MSG
-            #{announcement}
-
-            🎉 Congratulations, #{render_id point.to_id}, you now have #{points_token}! We're all so proud of you, keep it up!!!
+            #{message} 🎉 Congratulations, #{render_id point.to_id}, you now have #{points_token}! We're all so proud of you, keep it up!!!
           MSG
         end
       end
@@ -83,21 +94,45 @@ module Slack
         def self.render(point, total_points)
           message = "Hey #{render_id point.to_id}, have a Spiderman Point! Don't spend it all in one place!"
 
-          if point.reason.present?
+          with_reason(point, message) do
             <<~MSG
               #{message} Oh, btw #{render_id point.from_id} also wanted me to tell you this:
-
-              #{render_reason point.reason}
+              #{render_quote point.reason}
             MSG
-          else
-            message
           end
         end
       end
 
+      class HaveYouEver
+        extend Slack::Presenters::Formatting
+
+        def self.render(point, total_points)
+          message = <<~MSG
+            Has Anyone Really Been Far Even as Decided to Use Even Go Want to do Spideman Points? #{render_id point.to_id} sure has!!!
+          MSG
+
+          with_reason(point, message) do
+            <<~MSG
+              #{message} When asked for comment, #{render_id point.from_id} said this:
+              #{render_quote point.reason}
+            MSG
+          end
+        end
+      end
+
+      class AndSoCanYou
+        extend Slack::Presenters::Formatting
+
+        def self.render(point, total_points) =
+          "#{render_id point.to_id} is Spiderman Point and so can you! #{total_points} sure is nothing to sneeze at..."
+      end
+
       KLASSES = [
+        AndSoCanYou,
         Classic,
+        HaveYouEver,
         Hey,
+        Lorem,
         Mfw,
         PizzaTime,
       ]
