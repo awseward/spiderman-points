@@ -108,7 +108,7 @@ module Slack
 
         def self.render(point, total_points)
           message = <<~MSG
-            Has Anyone Really Been Far Even as Decided to Use Even Go Want to do Spideman Points? #{render_id point.from_id} sure has!!!
+            Has Anyone Really Been Far Even as Decided to Use Even Go Want to do Spideman Points? #{render_id point.to_id} sure has!!!
           MSG
 
           with_reason(point, message) do
