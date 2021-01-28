@@ -4,6 +4,8 @@ module Slack
     module Formatting
       def render_id(id) = "<@#{id}>"
 
+      def render_quote(reason) = reason.each_line.map { |line| "> #{line.strip}" }.join("\n")
+
       def one_or_many(quantity, one_val)
         # TODO: Maybe a slightly better error?
         raise ArgumentError, "Error: `one_or_many` requires `quantity` >= 1" if quantity < 1
@@ -31,12 +33,10 @@ module Slack
         def self.render(point, total_points)
           announcement = "#{render_id point.from_id} has awarded ONE (1) Spiderman Point to #{render_id point.to_id}!"
           announcement = if point.reason.present?
-            reason = point.reason.each_line.map { |line| "> #{line.strip}" }.join "\n"
-
             <<~MSG
              #{announcement} Why?
 
-             #{reason}
+             #{render_quote point.reason}
             MSG
           else
             announcement
@@ -77,8 +77,27 @@ module Slack
         end
       end
 
+      class Hey
+        extend Slack::Presenters::Formatting
+
+        def self.render(point, total_points)
+          message = "Hey #{render_id point.to_id}, have a Spiderman Point! Don't spend it all in one place!"
+
+          if point.reason.present?
+            <<~MSG
+              #{message} Oh, btw #{render_id point.from_id} also wanted me to tell you this:
+
+              #{render_reason point.reason}
+            MSG
+          else
+            message
+          end
+        end
+      end
+
       KLASSES = [
         Classic,
+        Hey,
         Mfw,
         PizzaTime,
       ]
