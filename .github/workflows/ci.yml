@@ -6,7 +6,7 @@
 
 jobs:
   schema:
-    container: ruby:3.0.0
+    container: ruby:3.0.1
     runs-on:
       - ubuntu-latest
     services:

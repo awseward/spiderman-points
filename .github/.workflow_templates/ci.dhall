@@ -22,7 +22,7 @@ in  Workflow::{
     , jobs = toMap
         { schema = GHA.Job::{
           , runs-on = [ OS.ubuntu-latest ]
-          , container = Some "ruby:3.0.0"
+          , container = Some "ruby:3.0.1"
           , services = toMap
               { postgres = GHA.Service::{
                 , image = Some "postgres:12.4"
