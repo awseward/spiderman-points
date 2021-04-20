@@ -18,6 +18,7 @@ class Point < ActiveRecord::Base
 
   def self.scores(team_id:)
     where(team_id: team_id).
+      where.not(to_id: 'USLACKBOT').
       group('from_id').
       count.
       sort_by { |user_id, score| -score  }.
