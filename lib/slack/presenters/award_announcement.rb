@@ -42,7 +42,7 @@ module Slack
         def self.render(point, total_points) =
           <<~MSG
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et #{render_id point.to_id} habet #{total_points} Spidermanus Pointiae™
-            Sorry you got this one, it's pretty stupid, but at least #{render_id point.from} had this nice thing to say about you:
+            Sorry you got this one, it's pretty stupid, but at least #{render_id point.from_id} had this nice thing to say about you:
 
             #{render_quote point.reason}
           MSG
