@@ -16,9 +16,7 @@ in  Workflow::{
     , name = "CI"
     , on =
         On.map
-          [ On.pullRequest
-              On.PushPull::{ branches = On.include [ "master", "main" ] }
-          ]
+          [ On.pullRequest On.PushPull::{ branches = On.include [ "main" ] } ]
     , jobs = toMap
         { schema = GHA.Job::{
           , runs-on = [ OS.ubuntu-latest ]

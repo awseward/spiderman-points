@@ -1,5 +1,7 @@
 { dhall-misc =
-    https://raw.githubusercontent.com/awseward/dhall-misc/20210126032915/package.dhall sha256:b32145fee2ff889e178d8000c117702c6ebdf1ab66a712ff1e3a3719f83eb85f
+    https://raw.githubusercontent.com/awseward/dhall-misc/20210611190215/package.dhall
+      sha256:9739f7e3d3b4be0cbff599ac3dd63045b474d6f34f081f6f6a3166aa5616b286
 , Prelude =
-    https://raw.githubusercontent.com/dhall-lang/dhall-lang/v20.0.0/Prelude/package.dhall sha256:21754b84b493b98682e73f64d9d57b18e1ca36a118b81b33d0a243de8455814b
+    https://raw.githubusercontent.com/dhall-lang/dhall-lang/v20.2.0/Prelude/package.dhall
+      sha256:a6036bc38d883450598d1de7c98ead113196fe2db02e9733855668b18096f07b
 }
