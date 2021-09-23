@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# http://cvsweb.openbsd.org/cgi-bin/cvsweb/ports/infrastructure/templates/rc.template
+#
+# See also: https://gist.github.com/anon987654321/4532cf8d6c59c1f43ec8973faa031103
+
+app_dir="/home/spoints/spoints"
+pid_filename='spoints.pid'
+pid_filepath="${app_dir}/${pid_filename}"
+
+rc_bg=YES
+
+# This is probably a bit of a heinous thing to do but it at least seems to work
+# for now...
+daemon='_'
+
+. /etc/rc.d/rc.subr
+
+rc_start() {
+  ${rcexec} "cd ${app_dir} && ./scripts/serverd.sh ${pid_filename}"
+}
+
+rc_check() {
+  ${rcexec} "kill -s 0 $(cat "${pid_filepath}")"
+}
+
+rc_stop() {
+  ${rcexec} "kill $(cat "${pid_filepath}")"
+}
+
+rc_cmd $1
