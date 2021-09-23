@@ -4,9 +4,8 @@
 #
 # See also: https://gist.github.com/anon987654321/4532cf8d6c59c1f43ec8973faa031103
 
-app_dir="/home/spoints/spoints"
-pid_filename='spoints.pid'
-pid_filepath="${app_dir}/${pid_filename}"
+app_dir='/home/spoints/spoints'
+pid_filepath='/home/spoints/spoints.pid'
 
 rc_bg=YES
 
@@ -17,7 +16,7 @@ daemon='_'
 . /etc/rc.d/rc.subr
 
 rc_start() {
-  ${rcexec} "cd ${app_dir} && ./scripts/serverd.sh ${pid_filename}"
+  ${rcexec} "cd ${app_dir} && ./scripts/serverd.sh ${pid_filepath}"
 }
 
 rc_check() {
