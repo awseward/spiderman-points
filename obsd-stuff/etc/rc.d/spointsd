@@ -9,6 +9,8 @@ pid_filepath='/home/spoints/spoints.pid'
 
 rc_bg=YES
 
+daemon_user='spoints'
+
 # This is probably a bit of a heinous thing to do but it at least seems to work
 # for now...
 daemon='_'
