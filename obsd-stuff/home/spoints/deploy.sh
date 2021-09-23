@@ -26,6 +26,10 @@ cd "${link_source_dirpath}"
 bundle config set --local deployment 'true'
 bundle install
 
+# I've found if you don't delete this first, it tends to start doing weird
+# things. Maybe I'm just using `ln` wrong, but this works, so 🤷.
+rm -rf "${link_target_dirpath}" || true
+
 ln -f -s "${link_source_dirpath}" "${link_target_dirpath}"
 
 doas rcctl restart spointsd
