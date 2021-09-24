@@ -18,7 +18,7 @@ daemon='_'
 . /etc/rc.d/rc.subr
 
 rc_start() {
-  ${rcexec} "cd ${app_dir} && ./scripts/serverd.sh ${pid_filepath}"
+  ${rcexec} "cd ${app_dir} && RACK_ENV=production ./scripts/serverd.sh ${pid_filepath}"
 }
 
 rc_check() {
