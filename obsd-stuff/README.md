@@ -37,7 +37,7 @@ All of the stuff in `/etc/relayd.conf`, generally
 
 Create the daemon user
 ```sh
-adduser -class daemon -batch spoints -shell ksh
+adduser -class daemon -shell ksh -batch spoints
 ```
 
 Add the following to `/etc/doas.conf` so that the `deploy.sh` can restart the
