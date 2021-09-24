@@ -4,29 +4,24 @@
 #
 # See also: https://gist.github.com/anon987654321/4532cf8d6c59c1f43ec8973faa031103
 
-app_dir='/home/spoints/spoints'
-pid_filepath='/home/spoints/spoints.pid'
-
 rc_bg=YES
+rc_reload=NO
 
 daemon_user='spoints'
-
-# This is probably a bit of a heinous thing to do but it at least seems to work
-# for now...
-daemon='_'
+daemon='/usr/local/bin/spoints'
+daemon_logger='daemon.info'
 
 . /etc/rc.d/rc.subr
 
-rc_start() {
-  ${rcexec} "cd ${app_dir} && RACK_ENV=production ./scripts/serverd.sh ${pid_filepath}"
-}
+daemon_user='spoints'
+pexp='ruby.*spoints'
 
 rc_check() {
-  ${rcexec} "kill -s 0 $(cat "${pid_filepath}")"
+  pgrep -T "${daemon_rtable}" -q -f "${pexp}"
 }
 
 rc_stop() {
-  ${rcexec} "kill $(cat "${pid_filepath}")"
+  pkill -T "${daemon_rtable}" -f "${pexp}"
 }
 
 rc_cmd $1

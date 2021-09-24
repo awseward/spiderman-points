@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd "/home/spoints/spoints" && RACK_env=production "/home/spoints/spoints/scripts/server.sh"
