@@ -29,6 +29,7 @@ mv "${extracted_dir}" "${link_source_dirpath}"
 cd "${link_source_dirpath}"
 
 # === BEGIN app-specific setup ===
+xargs -t rm -vf < .slugignore
 bundle config set --local deployment 'true'
 bundle install
 # === END app-specific setup ===
