@@ -54,3 +54,36 @@ pkg_add postgresql-client
 
 # Probably a bit more…
 ```
+
+# Rough rundown of "phases"
+
+### 1. New machine
+
+Set up things like:
+
+- non-root admin user
+- sshd_config
+- doas.conf
+- pf?
+- … etc.
+
+### 2. Setup deployment tools
+
+- Essentially, land `deploy.sh`
+- Possibly have this all run as a "deployer" user or something?
+
+### 3a. Per-app first deployment
+
+- Add app user
+- Do acme-client/httpd/relayd stuff
+- Add doas rules
+- Set up app daemon
+- Set up other runtime dependencies (postgres, ruby, etc.)
+
+- Land the app code
+- Start the daemon
+
+### 3. Per-app deployment
+
+- Land the new app code
+- Restart the daemon
