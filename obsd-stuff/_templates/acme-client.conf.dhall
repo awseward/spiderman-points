@@ -10,8 +10,7 @@
   domain ${domain} {
     alternative names { www.${domain} }
     domain key "/etc/ssl/private/${domain}.key"
-    domain certificate "/etc/ssl/${domain}.crt"
-    domain full chain certificate "/etc/ssl/${domain}.fullchain.pem"
+    domain full chain certificate "/etc/ssl/${domain}.crt"
     sign with letsencrypt
   }
   ''

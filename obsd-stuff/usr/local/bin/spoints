@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-cd "/home/spoints/spoints" && RACK_env=production "/home/spoints/spoints/scripts/server.sh"
+. "/home/spoints/spoints/app-env.sh" && cd "/home/spoints/spoints" && "/home/spoints/spoints/scripts/server.sh"

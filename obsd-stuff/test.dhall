@@ -13,6 +13,7 @@ in  { etc =
       , `httpd.conf` = ./_templates/httpd.conf.dhall domain
       , `relayd.conf` = ./_templates/relayd.conf.dhall domain
       }
+    , etc.`rc.d`.spointsd = ./_templates/spointsd as Text
     , usr.local.bin.spoints
       =
         ''
@@ -20,6 +21,6 @@ in  { etc =
 
         set -euo pipefail
 
-        cd "${appDir}" && RACK_env=production "${appDir}/scripts/server.sh"
+        . "${appDir}/app-env.sh" && cd "${appDir}" && "${appDir}/scripts/server.sh"
         ''
     }
