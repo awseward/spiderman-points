@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-. "/home/spoints/spoints/app-env.sh" && cd "/home/spoints/spoints" && "/home/spoints/spoints/scripts/server.sh"

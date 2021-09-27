@@ -1,6 +1,6 @@
 -- Usage:
 --
--- dhall to-directory-tree --output . <<< ./test.dhall
+-- dhall to-directory-tree --output _ <<< ./test.dhall
 let appName = "spoints"
 
 let appDir = "/home/${appName}/${appName}"
@@ -11,9 +11,19 @@ in  { etc =
       { `acme-client.conf` = ./_templates/acme-client.conf.dhall domain
       , `doas.conf` = ./_templates/doas.conf.dhall appName
       , `httpd.conf` = ./_templates/httpd.conf.dhall domain
+      , `pf.conf` = ./_templates/pf.conf as Text
+      , `rc.d`.spointsd = ./_templates/spointsd as Text
       , `relayd.conf` = ./_templates/relayd.conf.dhall domain
       }
-    , etc.`rc.d`.spointsd = ./_templates/spointsd as Text
+    , home.spoints
+      =
+      { `deploy.sh` = ./_templates/deploy.sh as Text
+      , `app-env.sh` =
+          ''
+          # Application configuration/secrets here as env vars, example:
+          # SOME_TOKEN=abc123!@#
+          ''
+      }
     , usr.local.bin.spoints
       =
         ''
