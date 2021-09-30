@@ -1,0 +1,50 @@
+http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/ports/infrastructure/templates/rc.template?rev=1.13&content-type=text/plain
+
+Below is an rc.d(8) script template containing all usable variables and
+functions set to their defaults.
+See rc.subr(8) for more information.
+
+-----------------------------------8<-----------------------------------
+#!/bin/ksh
+#
+# $OpenBSD: rc.template,v 1.13 2021/05/02 09:06:44 ajacoutot Exp $
+
+daemon="${TRUEPREFIX}/bin/foobar"
+#daemon_flags=
+#daemon_logger=
+#daemon_rtable=0
+#daemon_timeout="30"
+#daemon_user="root"
+
+. /etc/rc.d/rc.subr
+
+#pexp="$(eval echo ${daemon}${daemon_flags:+ ${daemon_flags}})"
+#rc_bg= # (undefined or "NO")
+#rc_reload= # (undefined or "NO")
+#rc_usercheck= # (undefined or "NO")
+
+#rc_pre() {
+#}
+
+#rc_start() {
+#	${rcexec} "${daemon_logger:+set -o pipefail; }${daemon} ${daemon_flags}${daemon_logger:+ 2>&1 |
+#		logger -ip ${daemon_logger} -t ${_name}}"
+#}
+
+#rc_check() {
+#	pgrep -T "${daemon_rtable}" -q -xf "${pexp}"
+#}
+
+#rc_reload() {
+#	pkill -HUP -T "${daemon_rtable}" -xf "${pexp}"
+#}
+
+#rc_stop() {
+#	pkill -T "${daemon_rtable}" -xf "${pexp}"
+#}
+
+#rc_post() {
+#}
+
+rc_cmd $1
+-----------------------------------8<-----------------------------------
