@@ -11,20 +11,16 @@ let cfgs =
         , relayAddrs = [ "127.0.0.1" ]
         , relayPort = 4567
         }
-      , { slug = "drewrelic"
+      , { slug = "drewrel"
         , domain = "drewrelic.com"
         , relayAddrs = [ "127.0.0.1" ]
         , relayPort = 80
         }
       ]
 
-let appName_ = "spoints"
-
-let appDir = "/home/${appName_}/${appName_}"
-
 in  { etc =
       { `acme-client.conf` = ./_templates/acme-client.conf.dhall cfgs
-      , `doas.conf` = ./_templates/doas.conf.dhall appName_
+      , `doas.conf` = ./_templates/doas.conf.dhall cfgs
       , `httpd.conf` = ./_templates/httpd.conf.dhall cfgs
       , `pf.conf` = ./_templates/pf.conf as Text
       , `rc.d`.spointsd = ./_templates/spointsd as Text
@@ -36,11 +32,15 @@ in  { etc =
     , home = ./_templates/appHomeDirs.dhall cfgs
     , usr.local.bin.spoints
       =
-        ''
-        #!/usr/bin/env bash
+        let slug = "spoints"
 
-        set -euo pipefail
+        let appDir = "/home/${slug}/${slug}"
 
-        . "${appDir}/app_env.sh" && cd "${appDir}" && "${appDir}/scripts/server.sh"
-        ''
+        in  ''
+            #!/usr/bin/env bash
+
+            set -euo pipefail
+
+            . "${appDir}/app_env.sh" && cd "${appDir}" && "${appDir}/scripts/server.sh"
+            ''
     }
