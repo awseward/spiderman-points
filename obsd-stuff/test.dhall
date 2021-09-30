@@ -42,6 +42,9 @@ in  { etc =
           # SOME_TOKEN=abc123!@#
           ''
       }
+    , home_
+      -- TODO: Replace `home.spoints` above with this if it seems viable
+      = ./_templates/appHomeDirs.dhall cfgs
     , usr.local.bin.spoints
       =
         ''
