@@ -1,12 +1,10 @@
-let Prelude =
-      https://raw.githubusercontent.com/dhall-lang/dhall-lang/v21.0.0/Prelude/package.dhall
-        sha256:46c48bba5eee7807a872bbf6c3cb6ee6c2ec9498de3543c5dcc7dd950e43999d
+let lib = ../lib.dhall
+
+let Prelude = lib.Prelude
 
 let List/map = Prelude.List.map
 
 let Map = Prelude.Map
-
-let lib = ../lib.dhall
 
 let AppConfig = lib.AppConfig
 

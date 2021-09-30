@@ -81,6 +81,7 @@ let renderTlsKeypair = λ(cfg : AppConfig) → "  tls keypair \$${domainMacro cf
 let renderTlsKeypairs = lined AppConfig renderTlsKeypair
 
 in  { AppConfig
+    , Prelude
     , indent
     , renderAllowHost
     , renderAllowHosts
