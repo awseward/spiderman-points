@@ -48,65 +48,46 @@ let finish =
         pass request tagged "OK_REQ"''
 
 in  λ(extIp : Text) →
-    λ(appConfigs : List lib.AppConfig) →
+    λ(cfgs : List lib.AppConfig) →
       ''
-      ${lib.renderDomainMacros appConfigs}
+      ${lib.renderDomainMacros cfgs}
 
-      ${lib.renderTables appConfigs}
+      ${lib.renderTables cfgs}
 
       log state changes
       log connection
 
       http protocol httpFilter {
         # return error
-
         http headerlen 4096
-
-      ${lib.renderProtoFwds appConfigs}
-
+      ${lib.renderProtoFwds cfgs}
       ${fwdHeaders}
-
       ${serverRespHeader}
         match response header set "Cache-Control" value "max-age=1814400; public"
-
       ${log}
-
       ${sts}
-
       ${reqMethods}
-      ${lib.renderAllowHosts appConfigs}
+      ${lib.renderAllowHosts cfgs}
         block request quick tagged "OK_METH" tag "BAD_HH"
-
       ${fileTypes}
-
       ${finish}
       }
 
 
       http protocol httpsFilter {
         # return error
-
         http headerlen 4096
-
-      ${lib.renderProtoFwds appConfigs}
-
-      ${lib.renderTlsKeypairs appConfigs}
-
+      ${lib.renderProtoFwds cfgs}
+      ${lib.renderTlsKeypairs cfgs}
       ${fwdHeaders}
-
       ${serverRespHeader}
         match response header set "Cache-Control" value "max-age=1814400; public"
-
       ${log}
-
       ${sts}
-
       ${reqMethods}
-      ${lib.renderAllowHosts appConfigs}
+      ${lib.renderAllowHosts cfgs}
         block request quick tagged "OK_METH" tag "BAD_HH"
-
       ${fileTypes}
-
       ${finish}
       }
 
@@ -114,15 +95,13 @@ in  λ(extIp : Text) →
       relay www {
         listen on ${extIp} port 80
         protocol httpFilter
-
-      ${lib.renderFwds appConfigs}
+      ${lib.renderFwds cfgs}
       }
 
 
       relay wwwssl {
         listen on ${extIp} port 443 tls
         protocol httpsFilter
-
-      ${lib.renderFwds appConfigs}
+      ${lib.renderFwds cfgs}
       }
       ''

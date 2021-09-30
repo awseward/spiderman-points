@@ -5,8 +5,8 @@ let Prelude = lib.Prelude
 let Text/concatMapSep = Prelude.Text.concatMapSep
 
 let renderServerBlock =
-      λ(appConfig : lib.AppConfig) →
-        let domain = appConfig.domain
+      λ(cfg : lib.AppConfig) →
+        let domain = cfg.domain
 
         in  ''
             server "www.${domain}" {
@@ -20,5 +20,5 @@ let renderServerBlock =
             }
             ''
 
-in  λ(appConfigs : List lib.AppConfig) →
-      Text/concatMapSep "\n\n" lib.AppConfig renderServerBlock appConfigs
+in  λ(cfgs : List lib.AppConfig) →
+      Text/concatMapSep "\n\n" lib.AppConfig renderServerBlock cfgs

@@ -5,8 +5,8 @@ let Prelude = lib.Prelude
 let Text/concatMapSep = Prelude.Text.concatMapSep
 
 let renderDomainBlock =
-      λ(appConfig : lib.AppConfig) →
-        let domain = appConfig.domain
+      λ(cfg : lib.AppConfig) →
+        let domain = cfg.domain
 
         in  ''
             domain ${domain} {
@@ -16,9 +16,9 @@ let renderDomainBlock =
               sign with letsencrypt
             }''
 
-in  λ(appConfigs : List lib.AppConfig) →
+in  λ(cfgs : List lib.AppConfig) →
       let domainBlocks =
-            Text/concatMapSep "\n\n" lib.AppConfig renderDomainBlock appConfigs
+            Text/concatMapSep "\n\n" lib.AppConfig renderDomainBlock cfgs
 
       in  ''
           # https://www.openbsdhandbook.com/services/webserver/ssl/
