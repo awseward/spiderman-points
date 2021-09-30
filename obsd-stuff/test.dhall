@@ -25,7 +25,7 @@ let appDir = "/home/${appName_}/${appName_}"
 let domain = "spoints.co.uk"
 
 in  { etc =
-      { `acme-client.conf` = ./_templates/acme-client.conf.dhall domain
+      { `acme-client.conf` = ./_templates/acme-client.conf.dhall appConfigs
       , `doas.conf` = ./_templates/doas.conf.dhall appName_
       , `httpd.conf` = ./_templates/httpd.conf.dhall domain
       , `pf.conf` = ./_templates/pf.conf as Text
