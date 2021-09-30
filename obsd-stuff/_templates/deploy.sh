@@ -2,6 +2,16 @@
 
 set -euo pipefail
 
+deploy_script_dir="$(readlink -f "$0" | xargs dirname)"; readonly deploy_script_dir
+
+tarball_url() {
+  local -r owner="$1"
+  local -r repo="$2"
+  local -r rev="$3"
+
+  echo "https://github.com/${owner}/${repo}/tarball/${rev}"
+}
+
 # === BEGIN parameterization ===
 owner="${GH_OWNER:-awseward}"
 repo="${GH_REPO_NAME:-spiderman-points}"
@@ -18,7 +28,7 @@ data_basedir="${HOME}/.local/share/deploy"
 mkdir -p "${download_dir}" "${data_basedir}"
 
 cd "${download_dir}"
-wget "https://github.com/${owner}/${repo}/tarball/${rev}"
+wget "$(tarball_url "${owner}" "${repo}" "${rev}")"
 extracted_dir="$(tar -zxvf "${rev}" | head -n1)"
 
 link_source_dirpath="${data_basedir}/${deploy_name}"
@@ -27,11 +37,10 @@ link_target_dirpath="${HOME}/${app_name}"
 mv "${extracted_dir}" "${link_source_dirpath}"
 
 cd "${link_source_dirpath}"
+xargs -t rm -vf < .slugignore
 
 # === BEGIN app-specific setup ===
-xargs -t rm -vf < .slugignore
-bundle config set --local deployment 'true'
-bundle install
+"${deploy_script_dir}/on_deploy.sh"
 # === END app-specific setup ===
 
 # I've found if you don't delete this first, it tends to start doing weird
