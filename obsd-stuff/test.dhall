@@ -22,12 +22,10 @@ let appName_ = "spoints"
 
 let appDir = "/home/${appName_}/${appName_}"
 
-let domain = "spoints.co.uk"
-
 in  { etc =
       { `acme-client.conf` = ./_templates/acme-client.conf.dhall appConfigs
       , `doas.conf` = ./_templates/doas.conf.dhall appName_
-      , `httpd.conf` = ./_templates/httpd.conf.dhall domain
+      , `httpd.conf` = ./_templates/httpd.conf.dhall appConfigs
       , `pf.conf` = ./_templates/pf.conf as Text
       , `rc.d`.spointsd = ./_templates/spointsd as Text
       , `relayd.conf` = ./_templates/relayd.conf.dhall extIp appConfigs
