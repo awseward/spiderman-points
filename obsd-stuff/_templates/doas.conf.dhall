@@ -12,4 +12,5 @@ let renderLine =
 
         in  "permit nopass ${cfg.slug} as root cmd rcctl args restart ${daemonName}"
 
-in  Text/concatMapSep "\n" lib.AppConfig renderLine
+in  λ(cfgs : List lib.AppConfig) →
+      Text/concatMapSep "\n" lib.AppConfig renderLine cfgs ++ "\n"
