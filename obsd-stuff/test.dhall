@@ -33,18 +33,7 @@ in  { etc =
         = ./_templates/daemons.dhall cfgs
       , `relayd.conf` = ./_templates/relayd.conf.dhall extIp cfgs
       }
-    , home.spoints
-      =
-      { `deploy.sh` = ./_templates/deploy.sh as Text
-      , `app-env.sh` =
-          ''
-          # Application configuration/secrets here as env vars, example:
-          # SOME_TOKEN=abc123!@#
-          ''
-      }
-    , home_
-      -- TODO: Replace `home.spoints` above with this if it seems viable
-      = ./_templates/appHomeDirs.dhall cfgs
+    , home = ./_templates/appHomeDirs.dhall cfgs
     , usr.local.bin.spoints
       =
         ''
@@ -52,6 +41,6 @@ in  { etc =
 
         set -euo pipefail
 
-        . "${appDir}/app-env.sh" && cd "${appDir}" && "${appDir}/scripts/server.sh"
+        . "${appDir}/app_env.sh" && cd "${appDir}" && "${appDir}/scripts/server.sh"
         ''
     }

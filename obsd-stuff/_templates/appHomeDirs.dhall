@@ -4,24 +4,39 @@ let Prelude =
 
 let List/map = Prelude.List.map
 
+let Map = Prelude.Map
+
 let lib = ../lib.dhall
 
-let user = λ(cfg : lib.AppConfig) → cfg.slug
+let AppConfig = lib.AppConfig
 
-let homeContents =
-      toMap
-        { `deploy.sh` = ./deploy.sh as Text
-        , `app-env.sh` =
-            ''
-            # Application configuration/secrets here as env vars, example:
-            # SOME_TOKEN=abc123!@#
-            ''
-        }
+let user = λ(cfg : AppConfig) → cfg.slug
 
-let toEntry =
-      λ(cfg : lib.AppConfig) → { mapKey = user cfg, mapValue = homeContents }
+let MapTextText = Map.Type Text Text
 
-in  List/map
-      lib.AppConfig
-      { mapKey : Text, mapValue : List { mapKey : Text, mapValue : Text } }
-      toEntry
+let MapEntry = Map.Entry Text MapTextText
+
+let homeContents
+    : AppConfig → MapTextText
+    = λ(cfg : AppConfig) →
+        toMap
+          { `app_env.sh` =
+              ''
+              # Application configuration/secrets here as env vars, example:
+              # SOME_TOKEN=abc123!@#
+              ''
+          , `deploy.sh` = ./deploy.sh as Text
+          , `deploy_vars.sh` =
+              ''
+              owner='FIXME_owner'
+              repo='FIXME_repo'
+              app_name='${cfg.slug}'
+              daemon_name='${cfg.slug}d''
+          }
+
+let keyValue
+    : AppConfig → MapEntry
+    = λ(cfg : AppConfig) →
+        Map.keyValue MapTextText (user cfg) (homeContents cfg)
+
+in  List/map AppConfig MapEntry keyValue
