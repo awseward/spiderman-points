@@ -6,15 +6,19 @@ let lib = ./lib.dhall
 let extIp = "66.42.11.73"
 
 let cfgs =
-      [ { slug = "spoints"
-        , domain = "spoints.co.uk"
+      [ { domain = "spoints.co.uk"
         , relayAddrs = [ "127.0.0.1" ]
         , relayPort = 4567
+        , repoOwner = "awseward"
+        , repoName = "spiderman-points"
+        , slug = "spoints"
         }
-      , { slug = "drewrel"
-        , domain = "drewrelic.com"
+      , { domain = "drewrelic.com"
         , relayAddrs = [ "127.0.0.1" ]
         , relayPort = 80
+        , repoOwner = "FIXME"
+        , repoName = "FIXME"
+        , slug = "drewrel"
         }
       ]
 

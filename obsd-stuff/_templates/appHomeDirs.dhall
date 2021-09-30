@@ -26,8 +26,8 @@ let homeContents
           , `deploy.sh` = ./deploy.sh as Text
           , `deploy_vars.sh` =
               ''
-              owner='FIXME_owner'
-              repo='FIXME_repo'
+              owner='${cfg.repoOwner}'
+              repo='${cfg.repoName}'
               app_name='${cfg.slug}'
               daemon_name='${cfg.slug}d''
           }

@@ -9,10 +9,12 @@ let Text/concatMapSep = Prelude.Text.concatMapSep
 let Text/spaces = Prelude.Text.spaces
 
 let AppConfig =
-      { slug : Text
-      , domain : Text
+      { domain : Text
       , relayAddrs : List Text
       , relayPort : Natural
+      , repoOwner : Text
+      , repoName : Text
+      , slug : Text
       }
 
 let indent =
