@@ -38,90 +38,109 @@ class App < Sinatra::Base
   get('/support') { todo }
   get('/install_complete') { erb :install_complete }
 
-  before '/slack/*' do
-    validate_slack_token unless development?
-    @slack_client = unless development?
-      token = OauthCredential.team_access_code params['team_id']
-      client = Slack::Web::Client.new(token: token)
-      client.auth_test
+  def with_graceful_slack_failure
+    yield
+  rescue Slack::Web::Api::Errors::SlackError => e
+    halt \
+      200,
+      {'Content-Type' => 'text/plain'},
+      (
+        "It looks like there's some trouble with Slack…\n\n" +
+        "Requests to Slack have returned the following error(s): `#{e&.to_s}`.\n\n" +
+        "You may want to consider checking https://status.slack.com."
+      )
+  end
 
-      client
+  before '/slack/*' do
+    with_graceful_slack_failure do
+      validate_slack_token unless development?
+      @slack_client = unless development?
+        token = OauthCredential.team_access_code params['team_id']
+        client = Slack::Web::Client.new(token: token)
+        client.auth_test
+
+        client
+      end
     end
   end
 
   before '/slack/slash_command' do
-    # Log the basics
-    puts "[#{params['team_id']}.#{params['user_id']}]: #{params['command']} #{params['text']}"
+    with_graceful_slack_failure do
+      # Log the basics
+      puts "[#{params['team_id']}.#{params['user_id']}]: #{params['command']} #{params['text']}"
 
-    @user = User.find_by(
-      team_id: params['team_id'],
-      user_id: params['user_id']
-    )
-    @responder = Slack::Responder.for_params params
+      @user = User.find_by(
+        team_id: params['team_id'],
+        user_id: params['user_id']
+      )
+      @responder = Slack::Responder.for_params params
 
-    # Say hi if we need to
-    unless @user.present?
-      @responder.ephemeral Slack::Presenters.first_time_greeting(params)
-      @user = User.new(
-        team_id:   params['team_id'],
-        user_id:   params['user_id'],
-        opted_out: false
-      ).save!
+      # Say hi if we need to
+      unless @user.present?
+        @responder.ephemeral Slack::Presenters.first_time_greeting(params)
+        @user = User.new(
+          team_id:   params['team_id'],
+          user_id:   params['user_id'],
+          opted_out: false
+        ).save!
+      end
     end
   end
 
   post '/slack/slash_command' do
-    case params['text']
-    when Slack::SlashCommand::TextMatchers::Empty
-      Slack::Presenters.response_for_empty_command params
+    with_graceful_slack_failure do
+      case params['text']
+      when Slack::SlashCommand::TextMatchers::Empty
+        Slack::Presenters.response_for_empty_command params
 
-    when Slack::SlashCommand::TextMatchers::Award
-      point = Point.from_slash_command params
-      recipient = User.find_by(
-        team_id: params['team_id'],
-        user_id: point.to_id
-      )
-
-      if recipient.present? && recipient.opted_out
-        @responder.ephemeral(
-          Slack::Presenters.recipient_has_opted_out(recipient.id)
+      when Slack::SlashCommand::TextMatchers::Award
+        point = Point.from_slash_command params
+        recipient = User.find_by(
+          team_id: params['team_id'],
+          user_id: point.to_id
         )
+
+        if recipient.present? && recipient.opted_out
+          @responder.ephemeral(
+            Slack::Presenters.recipient_has_opted_out(recipient.id)
+          )
+        else
+          point.save!
+          total_points = Point.where(team_id: point.team_id, to_id: point.to_id).count
+          @responder.in_channel Slack::Presenters.award_announcement(point, total_points)
+        end
+
+        # NOTE: No response directly back to user required. The `nil` returned
+        # here accomplishes that.
+        nil
+
+      when Slack::SlashCommand::TextMatchers::Recent
+        points = Point.recent(team_id: params['team_id'])
+        Slack::Presenters.recent(params, points)
+
+      when Slack::SlashCommand::TextMatchers::Scoreboard
+        scores = Point.scores(team_id: params['team_id'])
+        Slack::Presenters.scoreboard(params, scores)
+
+      when Slack::SlashCommand::TextMatchers::Help
+        base_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
+        Slack::Presenters.help(params, base_url: base_url)
+
+      when Slack::SlashCommand::TextMatchers::Opt::Out
+        @user.update_attributes(opted_out: true)
+        Slack::Presenters.opt_out_successful params
+
+      when Slack::SlashCommand::TextMatchers::Opt::In
+        @user.update_attributes(opted_out: false)
+        Slack::Presenters.opt_in_successful
+
+      when 'slack_auth_test'
+        Slack::Presenters.auth_test_result @slack_client.auth_test
+
       else
-        point.save!
-        total_points = Point.where(team_id: point.team_id, to_id: point.to_id).count
-        @responder.in_channel Slack::Presenters.award_announcement(point, total_points)
+        Slack::Presenters.response_for_invalid_command params
+
       end
-
-      # NOTE: No response directly back to user required. The `nil` returned
-      # here accomplishes that.
-      nil
-
-    when Slack::SlashCommand::TextMatchers::Recent
-      points = Point.recent(team_id: params['team_id'])
-      Slack::Presenters.recent(params, points)
-
-    when Slack::SlashCommand::TextMatchers::Scoreboard
-      scores = Point.scores(team_id: params['team_id'])
-      Slack::Presenters.scoreboard(params, scores)
-
-    when Slack::SlashCommand::TextMatchers::Help
-      base_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
-      Slack::Presenters.help(params, base_url: base_url)
-
-    when Slack::SlashCommand::TextMatchers::Opt::Out
-      @user.update_attributes(opted_out: true)
-      Slack::Presenters.opt_out_successful params
-
-    when Slack::SlashCommand::TextMatchers::Opt::In
-      @user.update_attributes(opted_out: false)
-      Slack::Presenters.opt_in_successful
-
-    when 'slack_auth_test'
-      Slack::Presenters.auth_test_result @slack_client.auth_test
-
-    else
-      Slack::Presenters.response_for_invalid_command params
-
     end
   rescue Awardable::SelfAwardedError
     SelfAwardedPoint.from_slash_command(params).save!
