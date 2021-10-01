@@ -50,7 +50,7 @@ permit nopass spoints as root cmd rcctl args restart spointsd
 #### • Set up for app runtime dependencies
 
 ```sh
-pkg_add postgresql-client
+pkg_add postgresql-client postgresql-server ruby-3.0.2 node
 
 # Probably a bit more…
 ```
