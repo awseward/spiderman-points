@@ -9,6 +9,7 @@ let hostCfg =
       { ip = "66.42.11.73"
       , appCfgs =
             [ { domain = "spoints.co.uk"
+              , pexp = "ruby.*puma.*spoints"
               , relayAddrs = [ "127.0.0.1" ]
               , relayPort = 4567
               , repoOwner = "awseward"
@@ -16,6 +17,7 @@ let hostCfg =
               , slug = "spoints"
               }
             , { domain = "drewrelic.com"
+              , pexp = "__FIXME__"
               , relayAddrs = [ "127.0.0.1" ]
               , relayPort = 80
               , repoOwner = "awseward"
@@ -26,31 +28,4 @@ let hostCfg =
           : List lib.AppConfig
       }
 
-let base = hostFiles hostCfg.ip hostCfg.appCfgs
-
-let extraCruft -- FIXME: Fit this into everything better
-               =
-      { etc.`rc.d`.spointsd = ../_templates/spointsd as Text
-      , usr.local.bin.spoints
-        =
-          let slug = "spoints"
-
-          let appDir = "/home/${slug}/${slug}"
-
-          in  ''
-              #!/usr/bin/env bash
-
-              set -euo pipefail
-
-              . "${appDir}/app_env.sh" && cd "${appDir}" && "${appDir}/scripts/server.sh"
-              ''
-      }
-
-let merged =
-    -- Wow, this sorta sucks that you can't just merge deep recursively… What I
-    -- mean is that if you just do `base ⫽ extraCruft`, it clobbers any
-    -- collisions' deeper nested fields from the left-hand side
-
-      base ⫽ { etc = base.etc ⫽ extraCruft.etc }
-
-in  merged
+in  hostFiles hostCfg.ip hostCfg.appCfgs

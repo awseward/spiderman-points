@@ -10,6 +10,7 @@ let Text/spaces = Prelude.Text.spaces
 
 let AppConfig =
       { domain : Text
+      , pexp : Text
       , relayAddrs : List Text
       , relayPort : Natural
       , repoOwner : Text

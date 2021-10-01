@@ -23,6 +23,7 @@ let homeContents
               # Application configuration/secrets here as env vars, example:
               # SOME_TOKEN=abc123!@#
               ''
+          , `app_start.sh` = ./app_start.sh as Text
           , `deploy.sh` = ./deploy.sh as Text
           , `deploy_vars.sh` =
               ''

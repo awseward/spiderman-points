@@ -8,12 +8,12 @@ rc_bg=YES
 rc_reload=NO
 
 daemon_user='spoints'
-daemon='/usr/local/bin/spoints'
+daemon='/home/spoints/app_start.sh'
+daemon_flags='"/home/spoints/spoints" "/home/spoints/app-env.sh"'
 daemon_logger='daemon.info'
 
 . /etc/rc.d/rc.subr
 
-daemon_user='spoints'
 pexp='ruby.*spoints'
 
 rc_check() {
