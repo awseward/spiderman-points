@@ -17,9 +17,11 @@ let hostCfg =
               , slug = "spoints"
               }
             , { domain = "drewrelic.com"
-              , pexp = "__FIXME__"
+              , pexp
+                -- this is probably just completely wrong
+                = "npm start"
               , relayAddrs = [ "127.0.0.1" ]
-              , relayPort = 80
+              , relayPort = 5001
               , repoOwner = "awseward"
               , repoName = "b2-backend-thing"
               , slug = "drewrel"
