@@ -31,6 +31,14 @@ let homeContents
               repo='${cfg.repoName}'
               app_name='${cfg.slug}'
               daemon_name='${cfg.slug}d''
+          , `on_deploy.sh` =
+              ''
+              #!/usr/bin/env bash
+
+              set -euo pipefail
+
+              ${cfg.onDeploy}
+              ''
           }
 
 let keyValue

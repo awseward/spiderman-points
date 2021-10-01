@@ -9,6 +9,11 @@ let hostCfg =
       { ip = "66.42.11.73"
       , appCfgs =
             [ { domain = "spoints.co.uk"
+              , onDeploy
+                -- It might be good to just have this be part of the repository
+                -- in a well-known file
+                =
+                  "bundle config set --local deployment 'true' && bundle install"
               , pexp = "ruby.*puma.*spoints"
               , relayAddrs = [ "127.0.0.1" ]
               , relayPort = 4567
@@ -17,6 +22,10 @@ let hostCfg =
               , slug = "spoints"
               }
             , { domain = "drewrelic.com"
+              , onDeploy
+                -- It might be good to just have this be part of the repository
+                -- in a well-known file
+                = "npm install && npm run build"
               , pexp
                 -- Yikes, need something better than this
                 = "node \\."
