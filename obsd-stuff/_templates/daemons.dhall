@@ -25,7 +25,7 @@ let daemonScript =
 
             . /etc/rc.d/rc.subr
 
-            pexp='${cfg.pexp} '
+            pexp='${cfg.pexp}'
 
             rc_check() {
               pgrep -T "\$\{daemon_rtable\}" -q -f "\$\{pexp\}"

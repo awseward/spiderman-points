@@ -18,8 +18,8 @@ let hostCfg =
               }
             , { domain = "drewrelic.com"
               , pexp
-                -- this is probably just completely wrong
-                = "npm start"
+                -- Yikes, need something better than this
+                = "node \\."
               , relayAddrs = [ "127.0.0.1" ]
               , relayPort = 5001
               , repoOwner = "awseward"
