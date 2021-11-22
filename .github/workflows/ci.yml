@@ -6,14 +6,14 @@
 
 jobs:
   schema:
-    container: ruby:3.0.1
+    container: ruby:3.0.2
     runs-on:
       - ubuntu-latest
     services:
       postgres:
         env:
           POSTGRES_PASSWORD: postgres
-        image: postgres:12.4
+        image: postgres:13.4
         options: "--health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5"
     steps:
       - uses: "actions/checkout@v2"
