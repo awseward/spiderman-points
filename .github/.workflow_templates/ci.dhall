@@ -20,10 +20,10 @@ in  Workflow::{
     , jobs = toMap
         { schema = GHA.Job::{
           , runs-on = [ OS.ubuntu-latest ]
-          , container = Some "ruby:3.0.1"
+          , container = Some "ruby:3.0.2"
           , services = toMap
               { postgres = GHA.Service::{
-                , image = Some "postgres:12.4"
+                , image = Some "postgres:13.4"
                 , env = toMap { POSTGRES_PASSWORD = "postgres" }
                 , options = Some
                     ( imports.Prelude.Text.concatSep
