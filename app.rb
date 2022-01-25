@@ -15,28 +15,7 @@ class App < Sinatra::Base
   # Unnecessary, but handy when I need to turn it off locally
   set :show_exceptions, development?
 
-  def custom_error(error_code)
-    @background_image_url = 'https://media.giphy.com/media/K96dWImE4eHVS/giphy.gif'
-    erb :"errors/#{error_code}"
-  end
-
   def development? = self.class.development?
-
-  def todo
-    @background_image_url = 'https://i.imgur.com/z8rTFgG.gif'
-    status 501
-    erb :'errors/under_construction'
-  end
-
-  error(404) { custom_error 404 }
-  error(500) { custom_error 500 }
-
-  get('/') { erb :index }
-
-  get('/tos')     { todo }
-  get('/privacy') { todo }
-  get('/support') { todo }
-  get('/install_complete') { erb :install_complete }
 
   def with_graceful_slack_failure
     yield
@@ -49,6 +28,18 @@ class App < Sinatra::Base
         "Requests to Slack have returned the following error(s): `#{e&.to_s}`.\n\n" +
         "You may want to consider checking https://status.slack.com."
       )
+  end
+
+  def base_url
+    scheme = request.env.fetch 'rack.url_scheme'
+    host = request.env.fetch 'HTTP_HOST'
+
+    "#{scheme}://#{host}"
+  end
+
+  get('/health') do
+    content_type :json
+    {}.to_json
   end
 
   before '/slack/*' do
@@ -81,7 +72,7 @@ class App < Sinatra::Base
         @user = User.new(
           team_id:   params['team_id'],
           user_id:   params['user_id'],
-          opted_out: false
+          opted_out: false # 🤔
         ).save!
       end
     end
@@ -123,15 +114,14 @@ class App < Sinatra::Base
         Slack::Presenters.scoreboard(params, scores)
 
       when Slack::SlashCommand::TextMatchers::Help
-        base_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
-        Slack::Presenters.help(params, base_url: base_url)
+        Slack::Presenters.help(params, base_url: Www.base_url || base_url)
 
       when Slack::SlashCommand::TextMatchers::Opt::Out
-        @user.update_attributes(opted_out: true)
+        @user.update!(opted_out: true)
         Slack::Presenters.opt_out_successful params
 
       when Slack::SlashCommand::TextMatchers::Opt::In
-        @user.update_attributes(opted_out: false)
+        @user.update!(opted_out: false)
         Slack::Presenters.opt_in_successful
 
       when 'slack_auth_test'
@@ -158,7 +148,7 @@ class App < Sinatra::Base
 
     OauthCredential.upsert_from_slack_response JSON.parse(response_body)
 
-    redirect to('/install_complete')
+    redirect to("#{Www.base_url}/installed.html")
   end
 
   get('/*') { 404 }
