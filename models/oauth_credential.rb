@@ -6,7 +6,7 @@ class OauthCredential < ActiveRecord::Base
     existing_credential = find_by( **unnested_response.slice(:app_id, :team_id) )
 
     if existing_credential.present?
-      existing_credential.update_attributes!( **unnested_response )
+      existing_credential.update!( **unnested_response )
     else
       credential = new_from_slack_response response
       credential.save!
