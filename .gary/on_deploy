@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+bundle config set --local deployment 'true'
+# shellcheck disable=SC2088
+bundle config set --local path '~/.bundle/'
+
+bundle install
