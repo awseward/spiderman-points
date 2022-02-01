@@ -26,5 +26,4 @@ module Sinatra
       end
     end
   end
-  register DevelopmentRoutes
 end
