@@ -35,8 +35,12 @@ module Slack
         end
       end
 
-      module AuthTest
+      module SlackAuthTest
         def self.===(text) = TextMatchers.first_term(text) == 'slack_auth_test'
+      end
+
+      module SlackErrorTest
+        def self.===(text) = TextMatchers.first_term(text) == 'slack_error_test'
       end
 
       def self.first_term(text) = text&.split(' ')&.first&.downcase

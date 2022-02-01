@@ -114,14 +114,14 @@ class App < Sinatra::Base
         @user.update!(opted_out: false)
         Slack::Presenters.opt_in_successful
 
-      when Slack::SlashCommand::TextMatchers::AuthTest
+      when Slack::SlashCommand::TextMatchers::SlackAuthTest
         Slack::Presenters.auth_test_result begin
           @slack_client.auth_test
         rescue StandardError => e
           e.message
         end
 
-      when 'slack_error_test'
+      when Slack::SlashCommand::TextMatchers::SlackErrorTest
         raise Slack::Web::Api::Errors::SlackError, 'This is only a test'
 
       else
