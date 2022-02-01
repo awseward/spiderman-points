@@ -47,7 +47,7 @@ module Slack
 
       def self.first_two_terms(text)
         fst, snd = text&.split(' ')
-        [fst, snd].compact.map { |str| str.strip.downcase }
+        [fst, snd].compact.map { _1.strip.downcase }
       end
     end
   end

@@ -21,7 +21,7 @@ class Point < ActiveRecord::Base
       where.not(to_id: 'USLACKBOT').
       group('from_id').
       count.
-      sort_by { |user_id, score| -score  }.
-      map { |user_id, count| { user_id: user_id, count: count } }
+      sort_by { |_user_id, score| -score  }.
+      map { { user_id: _1, count: _2 } }
   end
 end

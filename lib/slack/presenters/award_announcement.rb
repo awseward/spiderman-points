@@ -4,7 +4,7 @@ module Slack
     module Formatting
       def render_id(id) = "<@#{id}>"
 
-      def render_quote(text) = text.each_line.map { |line| "> #{line.strip}" }.join("\n")
+      def render_quote(text) = text.each_line.map { "> #{_1.strip}" }.join("\n")
 
       def one_or_many(quantity, one_val)
         # TODO: Maybe a slightly better error?
@@ -63,7 +63,7 @@ module Slack
           points_token = one_or_many(
             total_points,
             'your first Spiderman Point™'
-          ) { |many| "#{many} Spiderman Points™" }
+          ) { "#{_1} Spiderman Points™" }
 
           <<~MSG
             #{message} 🎉 Congratulations, #{render_id point.to_id}, you now have #{points_token}! We're all so proud of you, keep it up!!!
@@ -78,7 +78,7 @@ module Slack
           points_token = one_or_many(
             total_points,
             'your first Spiderman Point™'
-          ) { |many| "#{many} Spiderman Points™" }
+          ) { "#{_1} Spiderman Points™" }
 
           <<~MSG
             🍕 PIZZA TIME!!!! 🍕 One hot, fresh Spiderman Point™ coming up for #{render_id point.to_id}, courtesy of #{render_id point.from_id}! That makes #{points_token}! How does it feel?"
