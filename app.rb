@@ -5,30 +5,20 @@ require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'slack'
 
-Dir["#{Dir.pwd}/lib/**/*.rb"].each { |file| require file }
-Dir["#{Dir.pwd}/models/**/*.rb"].each { |file| require file }
+[
+  'lib/**/*.rb',
+  'models/**/*.rb'
+].flat_map { Dir[Pathname.new(Dir.pwd) / _1] }.each { require _1 }
 
 class App < Sinatra::Base
   include Slack::RequestValidation
+  include Slack::Misc
   register Sinatra::DevelopmentRoutes if development?
 
   # Unnecessary, but handy when I need to turn it off locally
   set :show_exceptions, development?
 
   def development? = self.class.development?
-
-  def with_graceful_slack_failure
-    yield
-  rescue Slack::Web::Api::Errors::SlackError => e
-    halt \
-      200,
-      {'Content-Type' => 'text/plain'},
-      (
-        "It looks like there's some trouble with Slack…\n\n" +
-        "Requests to Slack have returned the following error(s): `#{e&.to_s}`.\n\n" +
-        "You may want to consider checking https://status.slack.com."
-      )
-  end
 
   def base_url
     scheme = request.env.fetch 'rack.url_scheme'
@@ -124,8 +114,15 @@ class App < Sinatra::Base
         @user.update!(opted_out: false)
         Slack::Presenters.opt_in_successful
 
-      when 'slack_auth_test'
-        Slack::Presenters.auth_test_result @slack_client.auth_test
+      when Slack::SlashCommand::TextMatchers::SlackAuthTest
+        Slack::Presenters.auth_test_result begin
+          @slack_client.auth_test
+        rescue StandardError => e
+          e.message
+        end
+
+      when Slack::SlashCommand::TextMatchers::SlackErrorTest
+        raise Slack::Web::Api::Errors::SlackError, 'This is only a test'
 
       else
         Slack::Presenters.response_for_invalid_command params

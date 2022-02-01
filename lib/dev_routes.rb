@@ -21,7 +21,7 @@ module Sinatra
           __message_type__: 'SLACK_RESPONSE',
           body: JSON.parse(request.body.read),
         }
-        request.env.fetch('ws_clients', []).each { |ws| ws.send msg.to_json }
+        request.env.fetch('ws_clients', []).each { _1.send msg.to_json }
         204
       end
     end

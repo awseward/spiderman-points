@@ -20,12 +20,12 @@ module WsDemo
       if Faye::WebSocket.websocket? env
         ws = Faye::WebSocket.new(env, nil, { ping: KEEPALIVE_TIME })
 
-        ws.on :open do |event|
+        ws.on :open do |_event|
           p [:open, ws.object_id]
           @clients << ws
         end
 
-        ws.on(:message) { |event| p [:message, event.data] }
+        ws.on(:message) { p [:message, _1.data] }
 
         ws.on :close do |event|
           p [:close, ws.object_id, event.code, event.reason]
