@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'faye/websocket'
 
 # https://github.com/jeremyevans/roda/issues/44#issuecomment-138140240
