@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sinatra/base'
 
 module Sinatra
@@ -26,5 +28,4 @@ module Sinatra
       end
     end
   end
-  register DevelopmentRoutes
 end

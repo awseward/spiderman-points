@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Slack
   module Presenters
     def self.award_announcement(...) = AwardAnnouncement.random(...)
